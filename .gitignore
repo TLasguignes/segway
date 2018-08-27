@@ -1,11 +1,16 @@
 # Prerequisites
 *.d
+*.d
+*.dep
 
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
+*.crf
+*.__i
+
 
 # Precompiled Headers
 *.gch
@@ -30,3 +35,30 @@
 *.exe
 *.out
 *.app
+main
+GUI
+*.elf
+*.hex
+
+# Image rpi
+*.img
+
+# Archives
+*.zip
+*.tar
+*.gz
+*.bz2
+*.xz
+*.arc
+*.arj
+*.7z
+*.rar
+
+# Trucs de MDK
+*.uvgui*
+*.bak
+*.axf
+
+# Android
+*.apk
+

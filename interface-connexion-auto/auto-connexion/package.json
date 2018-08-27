@@ -1,0 +1,17 @@
+{
+  "name": "automatic_connection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "coucou": "echo \"Bonjour\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1",
+    "socketio-wildcard": "^2.0.0"
+  }
+}
