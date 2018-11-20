@@ -9,7 +9,7 @@
  *
  */
 
-#include "../inc/angles.h"
+#include "angles.h"
 
 /**
      * \fn Constructeur de classe

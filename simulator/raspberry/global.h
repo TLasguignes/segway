@@ -37,13 +37,12 @@ extern int etat_com;
 extern int etat_reception;
 extern int presence_user;
 
-
 extern Angles etat_angle;
 extern Battery batterie;
 extern Consigne consigne_couple;
 extern Beta beta ;
 
-
+#ifndef __WITH_PTHREAD__
 /* MUTEX ***********************************/
 extern RT_MUTEX var_mutex_beta; 
 extern RT_MUTEX var_mutex_etat_com; 
@@ -71,4 +70,5 @@ extern RT_TASK th_Envoyer;
 extern RT_TASK th_Presence_User; 
 extern RT_TASK th_Arret_Urgence; 
 
+#endif /* __WITH_PTHREAD__ */
 #endif	/* GLOBAL_H */

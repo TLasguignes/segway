@@ -9,7 +9,7 @@
  *
  */
 
-#include "../inc/beta.h"
+#include "beta.h"
 
 /**
      * \fn Constructeur de classe

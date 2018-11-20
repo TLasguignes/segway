@@ -62,3 +62,5 @@ GUI
 # Android
 *.apk
 
+/simulator/pthread-test/build/
+/simulator/pthread-test/dist/

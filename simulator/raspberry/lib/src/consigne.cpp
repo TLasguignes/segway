@@ -9,7 +9,7 @@
  *
  */
 
-#include "../inc/consigne.h"
+#include "consigne.h"
 
 /**
      * \fn Constructeur de classe

@@ -5,7 +5,7 @@
  * \date 20 Juillet 2017
  */
 
-#include "../inc/lib_msg_GUI.h"
+#include "lib_msg_GUI.h"
 
 /**
 	Fonction utilisée par le thread affichagepour initialisation de socket
@@ -25,12 +25,12 @@ int init_socket(int port){
 	//serv_host = (char*)ADRESSE_IP;
 
 	if((host_ptr = gethostbyname(serv_host)) == NULL) {
-		rt_printf("gethostbyname error");
+		printf("gethostbyname error");
 		exit(1);
 	}
 
 	if(host_ptr->h_addrtype !=  AF_INET) {
-		rt_printf("unknown address type");
+		printf("unknown address type");
 		exit(1);
 	}
 
@@ -41,15 +41,16 @@ int init_socket(int port){
 	serv_addr.sin_port = htons(port);
 
 	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		rt_printf("can't open stream socket");
+		printf("can't open stream socket");
 		exit(1);
 	}
  
 	if(connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-		rt_printf("can't connect to server\n");
+		printf("can't connect to server\n");
 		exit(1);
 	}
-        rt_printf("Connexion établie avec le server\n");
+        
+        printf("Connexion établie avec le server\n");
 	return sockfd;
 }
 

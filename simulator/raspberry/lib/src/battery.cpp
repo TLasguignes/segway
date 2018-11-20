@@ -9,7 +9,7 @@
  *
  */
 
-#include "../inc/battery.h"
+#include "battery.h"
 
 /**
      * \fn Constructeur de classe

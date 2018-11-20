@@ -19,11 +19,15 @@
 #include <stdio.h>
 #include <stdlib.h>     
 #include <sys/mman.h>
+#ifdef __WITH_PTHREAD__
+#include <thread>
+#else
 #include <alchemy/task.h>
 #include <alchemy/mutex.h>
 #include <alchemy/sem.h>
 #include <alchemy/timer.h>
 #include <alchemy/queue.h>
+#endif /* #ifdef __WITH_PTHREAD__ */
 
 #include <sys/socket.h>
 

@@ -8,6 +8,7 @@
 #ifndef LIB_MONITOR_H
 #define LIB_MONITOR_H
 
+#ifndef __WITH_PTHREAD__
 #include "../../includes.h"
 
 #define SARG_SIZE 20
@@ -48,4 +49,6 @@ extern "C" {
 #ifdef	__cplusplus
 }
 #endif
+
+#endif /* __WITH_PTHREAD__ */
 #endif
