@@ -8,7 +8,7 @@
     <widget-library name="../bin/Debug/SegwayUI.exe" internal="true" />
     <widget-library name="../../../../../../../../../app/lib/monodevelop/AddIns/MonoDevelop.GtkCore/libstetic.dll" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="963 827">
+  <widget class="Gtk.Window" id="MainWindow" design-size="912 827">
     <action-group name="Default">
       <action id="FileAction">
         <property name="Type">Action</property>
@@ -178,10 +178,31 @@
                         <property name="MemberName" />
                         <property name="Spacing">6</property>
                         <child>
-                          <widget class="Gtk.Label" id="label1">
+                          <widget class="Gtk.HBox" id="hbox2">
                             <property name="MemberName" />
-                            <property name="LabelProp" translatable="yes">&lt;b&gt;Server connexion&lt;/b&gt;</property>
-                            <property name="UseMarkup">True</property>
+                            <property name="Spacing">6</property>
+                            <child>
+                              <widget class="Gtk.Image" id="imageConnexion">
+                                <property name="MemberName" />
+                                <property name="Pixbuf">resource:SegwayUI.ressources.disconnected.png</property>
+                              </widget>
+                              <packing>
+                                <property name="Position">0</property>
+                                <property name="AutoSize">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="Gtk.Label" id="label1">
+                                <property name="MemberName" />
+                                <property name="Xalign">0</property>
+                                <property name="LabelProp" translatable="yes">&lt;b&gt;Server connexion&lt;/b&gt;</property>
+                                <property name="UseMarkup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="Position">1</property>
+                                <property name="AutoSize">False</property>
+                              </packing>
+                            </child>
                           </widget>
                           <packing>
                             <property name="Position">0</property>
@@ -289,9 +310,8 @@
                           <widget class="Gtk.Button" id="buttonServerConnect">
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
-                            <property name="Type">TextAndIcon</property>
-                            <property name="Icon">resource:SegwayUI.ressources.disconnected.png</property>
-                            <property name="Label" translatable="yes">    _Connect</property>
+                            <property name="Type">TextOnly</property>
+                            <property name="Label" translatable="yes">Connect</property>
                             <property name="UseUnderline">True</property>
                             <signal name="Clicked" handler="OnButtonServerConnectClicked" />
                           </widget>
@@ -436,6 +456,7 @@
                       <widget class="Gtk.Label" id="labelUser">
                         <property name="MemberName" />
                         <property name="Xpad">20</property>
+                        <property name="Xalign">0</property>
                         <property name="LabelProp" translatable="yes">label3</property>
                       </widget>
                       <packing>

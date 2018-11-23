@@ -5,7 +5,7 @@
  * Created on 10-07 2017
  */
 
-#include "lib_serial.h"
+#include "comstm32.h"
 
 /**
         Initialize the serial port in order to send and receive messages through it

@@ -37,7 +37,7 @@ namespace SegwayUI
             EmergencyStopID
         };
 
-        private const int TIMEOUT = 20000;
+        private const int TIMEOUT = 1000;
 
         public delegate void InvalidEvent(VarID id);
         public InvalidEvent InvalidEventHandler = null;
@@ -78,6 +78,7 @@ namespace SegwayUI
             {
                 angularPositionWidget.CurrentValue = value;
                 AngularPositionInvalid = false;
+                angularPositionTimer.Start();
             }
         }
 
@@ -106,6 +107,7 @@ namespace SegwayUI
             {
                 betaAngleWidget.CurrentValue = value;
                 BetaAngleInvalid = false;
+                betaAngleTimer.Start();
             }
         }
 
@@ -134,6 +136,7 @@ namespace SegwayUI
             {
                 angularSpeedWidget.CurrentValue = value;
                 AngularSpeedInvalid = false;
+                angularSpeedTimer.Start();
             }
         }
 
@@ -162,6 +165,7 @@ namespace SegwayUI
             {
                 batteryLevelWidget.Value = value;
                 BatteryLevelInvalid = false;
+                batteryLevelTimer.Start();
             }
         }
 
@@ -190,6 +194,7 @@ namespace SegwayUI
             {
                 linearSpeedWidget.CurrentValue = value;
                 LinearSpeedInvalid = false;
+                linearSpeedTimer.Start();
             }
         }
 
@@ -218,6 +223,7 @@ namespace SegwayUI
             {
                 torqueWidget.CurrentValue = value;
                 TorqueInvalid = false;
+                torqueTimer.Start();
             }
         }
 
@@ -246,6 +252,7 @@ namespace SegwayUI
             {
                 userPresenceWidget.Value = value;
                 UserPresenceInvalid = false;
+                userPresenceTimer.Start();
             }
         }
 
@@ -274,6 +281,7 @@ namespace SegwayUI
             {
                 emergencyStopWidget.Value = value;
                 EmergencyStopInvalid = false;
+                emergencyStopTimer.Start();
             }
         }
 
@@ -420,7 +428,7 @@ namespace SegwayUI
             userPresenceTimer.Elapsed += new System.Timers.ElapsedEventHandler(ElapsedEventHandler);
             emergencyStopTimer.Elapsed += new System.Timers.ElapsedEventHandler(ElapsedEventHandler);
 
-            angularSpeedTimer.Interval = TIMEOUT;
+            angularPositionTimer.Interval = TIMEOUT;
             betaAngleTimer.Interval = TIMEOUT;
             angularSpeedTimer.Interval = TIMEOUT;
             batteryLevelTimer.Interval = TIMEOUT;
@@ -453,7 +461,43 @@ namespace SegwayUI
 
         private void ElapsedEventHandler(object sender, System.Timers.ElapsedEventArgs e)
         {
+            System.Timers.Timer timer = (System.Timers.Timer)sender;
 
+            if (timer == angularPositionTimer){
+                AngularPositionInvalid = true;
+                angularPositionTimer.Stop();
+            }
+            else if (timer == betaAngleTimer){
+                betaAngleTimer.Stop();
+                BetaAngleInvalid = true;
+            }
+            else if (timer == angularSpeedTimer){
+                angularSpeedTimer.Stop();
+                AngularSpeedInvalid = true;
+            }
+            else if (timer == batteryLevelTimer){
+                batteryLevelTimer.Stop();
+                BatteryLevelInvalid = true;
+            }
+            else if (timer == linearSpeedTimer){
+                linearSpeedTimer.Stop();
+                LinearSpeedInvalid = true;
+            }
+            else if (timer == torqueTimer){
+                torqueTimer.Stop();
+                TorqueInvalid = true;
+            }
+            else if (timer == userPresenceTimer){
+                userPresenceTimer.Stop();
+                UserPresenceInvalid = true;
+            }
+            else if (timer == emergencyStopTimer){
+                emergencyStopTimer.Stop();
+                EmergencyStopInvalid = true;
+            }
+            else {
+                Console.WriteLine("Invalid timer expired");
+            }
         }
     }
 }

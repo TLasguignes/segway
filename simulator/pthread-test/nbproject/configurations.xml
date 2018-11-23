@@ -4,14 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../raspberry/lib/inc/angles.h</itemPath>
-      <itemPath>../raspberry/lib/inc/battery.h</itemPath>
-      <itemPath>../raspberry/lib/inc/beta.h</itemPath>
-      <itemPath>../raspberry/lib/inc/consigne.h</itemPath>
+      <itemPath>../raspberry/lib/inc/comgui.h</itemPath>
+      <itemPath>../raspberry/lib/inc/comstm32.h</itemPath>
       <itemPath>../raspberry/lib/inc/constantes.h</itemPath>
-      <itemPath>../raspberry/lib/inc/lib_monitor.h</itemPath>
-      <itemPath>../raspberry/lib/inc/lib_msg_GUI.h</itemPath>
-      <itemPath>../raspberry/lib/inc/lib_serial.h</itemPath>
+      <itemPath>../raspberry/lib/inc/messages.h</itemPath>
+      <itemPath>../raspberry/lib/inc/parameters.h</itemPath>
+      <itemPath>../raspberry/lib/inc/trace.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -20,14 +18,12 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../raspberry/lib/src/angles.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/battery.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/beta.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/consigne.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/lib_monitor.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/lib_msg_GUI.cpp</itemPath>
-      <itemPath>../raspberry/lib/src/lib_serial.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/comgui.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/comstm32.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/messages.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/parameters.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/trace.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -66,41 +62,21 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="../raspberry/lib/inc/angles.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/battery.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/inc/beta.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/inc/consigne.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_monitor.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_msg_GUI.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_serial.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/trace.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/angles.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/battery.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/beta.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/consigne.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/lib_monitor.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/lib_msg_GUI.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/lib_serial.cpp"
+      <item path="../raspberry/lib/src/parameters.cpp"
             ex="false"
             tool="1"
             flavor2="0">
@@ -128,44 +104,30 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="../raspberry/lib/inc/angles.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/battery.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/inc/beta.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/inc/consigne.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_monitor.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_msg_GUI.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/inc/lib_serial.h" ex="false" tool="3" flavor2="0">
+      <item path="../raspberry/lib/inc/trace.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/angles.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../raspberry/lib/src/comgui.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/battery.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/beta.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/consigne.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/lib_monitor.cpp"
+      <item path="../raspberry/lib/src/parameters.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../raspberry/lib/src/lib_msg_GUI.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../raspberry/lib/src/lib_serial.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../raspberry/lib/src/trace.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

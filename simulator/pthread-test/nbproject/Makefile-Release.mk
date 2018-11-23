@@ -35,13 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/db41d586/angles.o \
-	${OBJECTDIR}/_ext/db41d586/battery.o \
-	${OBJECTDIR}/_ext/db41d586/beta.o \
-	${OBJECTDIR}/_ext/db41d586/consigne.o \
-	${OBJECTDIR}/_ext/db41d586/lib_monitor.o \
-	${OBJECTDIR}/_ext/db41d586/lib_msg_GUI.o \
-	${OBJECTDIR}/_ext/db41d586/lib_serial.o \
+	${OBJECTDIR}/_ext/db41d586/comgui.o \
+	${OBJECTDIR}/_ext/db41d586/comstm32.o \
+	${OBJECTDIR}/_ext/db41d586/messages.o \
+	${OBJECTDIR}/_ext/db41d586/parameters.o \
+	${OBJECTDIR}/_ext/db41d586/trace.o \
 	${OBJECTDIR}/main.o
 
 
@@ -69,40 +67,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pthread-test: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pthread-test ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/db41d586/angles.o: ../raspberry/lib/src/angles.cpp
+${OBJECTDIR}/_ext/db41d586/comgui.o: ../raspberry/lib/src/comgui.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/angles.o ../raspberry/lib/src/angles.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comgui.o ../raspberry/lib/src/comgui.cpp
 
-${OBJECTDIR}/_ext/db41d586/battery.o: ../raspberry/lib/src/battery.cpp
+${OBJECTDIR}/_ext/db41d586/comstm32.o: ../raspberry/lib/src/comstm32.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/battery.o ../raspberry/lib/src/battery.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comstm32.o ../raspberry/lib/src/comstm32.cpp
 
-${OBJECTDIR}/_ext/db41d586/beta.o: ../raspberry/lib/src/beta.cpp
+${OBJECTDIR}/_ext/db41d586/messages.o: ../raspberry/lib/src/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/beta.o ../raspberry/lib/src/beta.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/messages.o ../raspberry/lib/src/messages.cpp
 
-${OBJECTDIR}/_ext/db41d586/consigne.o: ../raspberry/lib/src/consigne.cpp
+${OBJECTDIR}/_ext/db41d586/parameters.o: ../raspberry/lib/src/parameters.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/consigne.o ../raspberry/lib/src/consigne.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/parameters.o ../raspberry/lib/src/parameters.cpp
 
-${OBJECTDIR}/_ext/db41d586/lib_monitor.o: ../raspberry/lib/src/lib_monitor.cpp
+${OBJECTDIR}/_ext/db41d586/trace.o: ../raspberry/lib/src/trace.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/lib_monitor.o ../raspberry/lib/src/lib_monitor.cpp
-
-${OBJECTDIR}/_ext/db41d586/lib_msg_GUI.o: ../raspberry/lib/src/lib_msg_GUI.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/lib_msg_GUI.o ../raspberry/lib/src/lib_msg_GUI.cpp
-
-${OBJECTDIR}/_ext/db41d586/lib_serial.o: ../raspberry/lib/src/lib_serial.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/lib_serial.o ../raspberry/lib/src/lib_serial.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/trace.o ../raspberry/lib/src/trace.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

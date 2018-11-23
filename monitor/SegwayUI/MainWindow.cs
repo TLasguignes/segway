@@ -333,11 +333,10 @@ public partial class MainWindow : Gtk.Window
             else
             {
                 buttonServerConnect.Label = "Disconnect";
-                Gtk.Image img = new Gtk.Image();
 
                 try
                 {
-                    img.Pixbuf = Pixbuf.LoadFromResource("SegwayUI.ressources.connected.png");
+                    imageConnexion.Pixbuf = Pixbuf.LoadFromResource("SegwayUI.ressources.connected.png");
                 }
                 catch (ArgumentException a)
                 {
@@ -347,21 +346,18 @@ public partial class MainWindow : Gtk.Window
                 {
                     Console.WriteLine("Error while opening ressource: " + ex.ToString());
                 }
-                    
-                buttonServerConnect.Image = img;
+                 
                 ChangeSensitivity(true);
             }
         }
         else // deconnection du server
         {
             segwayManager.Close();
-
             buttonServerConnect.Label = "Connect";
-            Gtk.Image img = new Gtk.Image();
 
             try
             {
-                img.Pixbuf = Pixbuf.LoadFromResource("SegwayUI.ressources.disconnected.png");
+                imageConnexion.Pixbuf = Pixbuf.LoadFromResource("SegwayUI.ressources.disconnected.png");
             }
             catch (ArgumentException a)
             {
@@ -372,9 +368,7 @@ public partial class MainWindow : Gtk.Window
                 Console.WriteLine("Error while opening ressource: " + ex.ToString());
             }
 
-            buttonServerConnect.Image = img;
             ChangeSensitivity(false);
-
             messageLogDialog.Clear();
         }
     }
@@ -386,7 +380,10 @@ public partial class MainWindow : Gtk.Window
 
     protected void OnQuitActionActivated(object sender, EventArgs e)
     {
-        throw new NotImplementedException("Menu event not yet implemented.");
+        Console.WriteLine("Bye bye 2");
+        if (segwayManager != null) segwayManager.Close();
+        this.Destroy();
+        Application.Quit();
     }
 
     protected void OnShowLogActionActivated(object sender, EventArgs e)

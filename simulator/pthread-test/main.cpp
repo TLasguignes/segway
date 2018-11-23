@@ -13,16 +13,14 @@
 
 #include <cstdlib>
 #include <iostream>
-
 #include <thread>
 
-#include "angles.h"
-#include "battery.h"
-#include "beta.h"
-#include "consigne.h"
-#include "lib_monitor.h"
-#include "lib_serial.h"
-#include "lib_msg_GUI.h"
+#include "parameters.h"
+#include "messages.h"
+
+//#include "trace.h"
+//#include "comstm32.h"
+//#include "comgui.h"
 
 using namespace std;
 
@@ -31,15 +29,36 @@ int etat_com;
 int etat_reception;
 int presence_user;
 
-Angles etat_angle;
+/*Angles etat_angle;
 Battery batterie;
 Consigne consigne_couple;
-Beta beta ;
+Beta beta ;*/
+
 /*
  * 
  */
 int main(int argc, char** argv) {
-
+    Message *a;
+    MessageFloat *f;
+    MessageString *s;
+    MessageBool *b;
+    
+    a = new Message();
+    cout << "Message " << a->ToString() << endl;
+    
+    f = new MessageFloat(MESSAGE_ANGLE_POSITION, 10.5);
+    cout << "MessageFloat " << f->ToString() << endl;
+    
+    s = new MessageString(MESSAGE_LOG, "Should crash here");
+    cout << "MessageString " << s->ToString() << endl;
+    
+    b = new MessageBool(MESSAGE_USER_PRESENCE, true);
+    cout << "MessageString " << b->ToString() << endl;
+    
+    delete (a);
+    a=(Message*)f;
+    cout << "Message " << a->ToString() << endl;
+    
     return 0;
 }
 
