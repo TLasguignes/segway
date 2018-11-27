@@ -16,6 +16,8 @@
 /*																									   									  */
 /*******************************************************************************/
 
+#error "supprimer includes.h de votre fichier"
+
 #include <stdio.h>
 #include <stdlib.h>     
 #include <sys/mman.h>

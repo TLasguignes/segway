@@ -47,7 +47,12 @@ namespace SegwayUI
                 minValue = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -65,7 +70,12 @@ namespace SegwayUI
                 maxValue = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -86,7 +96,12 @@ namespace SegwayUI
                 if (currentValue < minValue) currentValue = minValue;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -104,7 +119,12 @@ namespace SegwayUI
                 title = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -122,7 +142,12 @@ namespace SegwayUI
                 fillColor = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -140,7 +165,12 @@ namespace SegwayUI
                 borderColor = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -158,7 +188,12 @@ namespace SegwayUI
                 fontColor = value;
 
                 // Redraw the widget
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -175,7 +210,13 @@ namespace SegwayUI
             {
                 invalid = value;
 
-                if (drawingWidget != null) drawingWidget.QueueDraw();
+                // Redraw the widget
+                if (drawingWidget != null)
+                {
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
+                }
             }
         }
 
@@ -192,10 +233,15 @@ namespace SegwayUI
                 if (drawingWidget != null)
                 {
                     drawingWidget.Sensitive = value;
-                    drawingWidget.QueueDraw();
+
+                    Gtk.Application.Invoke(delegate {
+                        drawingWidget.QueueDraw();
+                    });
                 }
             }
         }
+
+        private bool jobInProgress = false;
 
         private void InitJaugeWidget(string title, double min, double max)
         {
@@ -253,6 +299,8 @@ namespace SegwayUI
 
         private void HandleExposeEventHandler(object o, ExposeEventArgs args)
         {
+            jobInProgress = true;
+
             DrawingArea area = (DrawingArea)o;
             Cairo.Context cr = Gdk.CairoHelper.Create(area.GdkWindow);
 
@@ -366,6 +414,8 @@ namespace SegwayUI
 
             ((IDisposable)cr.GetTarget()).Dispose();
             ((IDisposable)cr).Dispose();
+
+            jobInProgress = false;
         }
     }
 }

@@ -25,10 +25,6 @@
 #ifndef __PARAMETERS_H__
 #define __PARAMETERS_H__
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
 /*! \def BATTERY_LEVEL_UNKNOWN
     \brief Valeur décrivant un niveau inconnu de la batterie
  */
@@ -115,7 +111,4 @@ public:
     void CommunicationState(bool state);
 };
 
-//#ifdef __cplusplus
-//}
-//#endif
 #endif /* __PARAMETERS_H__ */

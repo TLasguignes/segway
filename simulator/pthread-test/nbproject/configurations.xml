@@ -74,6 +74,8 @@
       </item>
       <item path="../raspberry/lib/inc/trace.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/parameters.cpp"
@@ -130,6 +132,56 @@
       <item path="../raspberry/lib/src/trace.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug__Raspberry_" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>../raspberry/lib/inc</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>__WITH_PTHREAD__</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../raspberry/lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/inc/comstm32.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/inc/trace.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/src/comgui.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../raspberry/lib/src/parameters.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../raspberry/lib/src/trace.cpp" ex="true" tool="1" flavor2="8">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>
     </conf>
   </confs>

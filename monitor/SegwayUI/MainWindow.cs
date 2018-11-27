@@ -40,7 +40,7 @@ public partial class MainWindow : Gtk.Window
         globalVariables.AngularPositionWidget.FillColor = new Cairo.Color(0.1, 0.8, 0.3);
         globalVariables.AngularPosition = 0;
 
-        globalVariables.TorqueWidget = new JaugeWidget(drawingareaTorque, "Torque (N.m)", 0, 200);
+        globalVariables.TorqueWidget = new JaugeWidget(drawingareaTorque, "Torque (N.m)", 0, 20);
         globalVariables.TorqueWidget.FillColor = new Cairo.Color(0.8, 0.0, 0.3); 
         globalVariables.Torque = 0.0;
 
@@ -52,7 +52,7 @@ public partial class MainWindow : Gtk.Window
         globalVariables.LinearSpeedWidget.FillColor = new Cairo.Color(0.8, 0.2, 0.2);
         globalVariables.LinearSpeed = 0;  
 
-        globalVariables.BetaAngleWidget = new JaugeWidget(drawingareaBeta, "Beta Angle (rad)", -Math.PI, Math.PI);
+        globalVariables.BetaAngleWidget = new JaugeWidget(drawingareaBeta, "Beta Angle (rad)", -Math.PI/4, Math.PI/4);
         globalVariables.BetaAngleWidget.FillColor = new Cairo.Color(0.1, 0.1, 0.7);
         globalVariables.BetaAngle = 0.0;
 
@@ -82,9 +82,16 @@ public partial class MainWindow : Gtk.Window
         a.RetVal = true;
     }
 
+    protected void UpdateMessageLogger(string s)
+    {
+        messageLogDialog.Add(s);
+    }
+
     void HandleCommandReceivedEvent(string header, string data, byte[] buffer)
     {
-        messageLogDialog.Add(header + "=" +data);
+        Gtk.Application.Invoke(delegate {
+            UpdateMessageLogger(header + "=" + data+"\n");
+        });
 
         if (header != null)
         {

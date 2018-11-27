@@ -22,114 +22,217 @@
  */
 
 #include "comgui.h"
+#include <iostream>
+#include <sys/socket.h>
+
+#include <netdb.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
+#include <algorithm>
+
+const string LABEL_GUI_ANGULAR_POSITION = "AngularPosition";
+const string LABEL_GUI_ANGULAR_SPEED = "AngularSpeed";
+const string LABEL_GUI_BATTERY_LEVEL = "Battery";
+const string LABEL_GUI_LINEAR_SPEED = "LinearSpeed";
+const string LABEL_GUI_USER_PRESENCE = "User";
+const string LABEL_GUI_BETA_ANGLE = "Beta";
+const string LABEL_GUI_TORQUE = "Torque";
+const string LABEL_GUI_EMERGENCY_STOP = "Emergency";
+const string LABEL_GUI_LOG = "Log";
 
 /**
-	Fonction utilisée par le thread affichagepour initialisation de socket
-*/
+        Fonction utilisée par le thread affichage pour initialisation de socket
+ */
 
-int init_socket(int port){
+int ComGui::Open(int port) {
+    struct sockaddr_in server;
 
-	//Initialisation de socket de Linux
-	int sockfd;
-	struct sockaddr_in serv_addr;
-	char *serv_host;
-	struct hostent *host_ptr; 
+    socketFD = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFD < 0) {
+        perror("Can not create socket");
+        exit(-1);
+    }
 
-	//port = SERV_TCP_PORT;
-	// changer localhost en adresse IP serveur (faire DEFINE à modifier par l'étudiant)
-	serv_host = (char*)"localhost";
-	//serv_host = (char*)ADRESSE_IP;
+    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
 
-	if((host_ptr = gethostbyname(serv_host)) == NULL) {
-		printf("gethostbyname error");
-		exit(1);
-	}
+    if (bind(socketFD, (struct sockaddr *) &server, sizeof (server)) < 0) {
+        perror("Can not bind socket");
+        exit(-1);
+    }
 
-	if(host_ptr->h_addrtype !=  AF_INET) {
-		printf("unknown address type");
-		exit(1);
-	}
+    listen(socketFD, 1);
 
-	bzero((char *) &serv_addr, sizeof(serv_addr));
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = 
-	((struct in_addr *)host_ptr->h_addr_list[0])->s_addr;
-	serv_addr.sin_port = htons(port);
+    return socketFD;
+}
 
-	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		printf("can't open stream socket");
-		exit(1);
-	}
- 
-	if(connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-		printf("can't connect to server\n");
-		exit(1);
-	}
+void ComGui::Close() {
+    close(socketFD);
+
+    socketFD = -1;
+}
+
+int ComGui::AcceptClient() {
+    struct sockaddr_in client;
+    int c = sizeof (struct sockaddr_in);
+
+    clientID = accept(socketFD, (struct sockaddr *) &client, (socklen_t*) & c);
+
+    if (clientID < 0) {
+        perror("Accept failed in AcceptClient");
+        exit(-1);
+    }
+
+    return clientID;
+}
+
+/**
+        Envoie une trame vers l'affichage
+        @params int sock : numéro de socket
+        @params char * msg : tableau de caractères à envoyer, maximum 256 caractères
+ */
+void ComGui::Write(Message* msg) {
+    string *str;
+    
+    // Call user method before Write
+    Write_Pre();
+    
+    /* Convert message to string to send to GUI */
+    str = MessageToString(msg);
+    
+    cout << "Message sent to GUI: " << str->c_str() << endl;
+    write(clientID, str->c_str(), str->length());
+    
+    delete(str);
+    
+    // Call user method after write
+    Write_Post();
+}
+
+string *ComGui::MessageToString(Message *msg)
+{
+    int id;
+    string *str;
+    
+    if (msg != NULL) {
+        id = msg->GetID();
         
-        printf("Connexion établie avec le server\n");
-	return sockfd;
+        switch (id)
+        {
+            case MESSAGE_ANGLE_POSITION:
+                str = new string(LABEL_GUI_ANGULAR_POSITION+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_ANGULAR_SPEED:
+                str = new string(LABEL_GUI_ANGULAR_SPEED+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_BATTERY:
+                str = new string(LABEL_GUI_BATTERY_LEVEL+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_BETA:
+                str = new string(LABEL_GUI_BETA_ANGLE+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_LINEAR_SPEED:
+                str = new string(LABEL_GUI_LINEAR_SPEED+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_TORQUE:
+                str = new string(LABEL_GUI_TORQUE+"="+to_string(((MessageFloat*)msg)->GetValue())+"\n");
+                replace(str->begin(), str->end(), '.', ','); // Mono C# require float to have a , instead of a .
+                break;
+            case MESSAGE_EMERGENCY_STOP:
+                str = new string(LABEL_GUI_EMERGENCY_STOP+"=");
+                if (((MessageBool*)msg)->GetState())
+                    str->append("True\n");
+                else
+                    str->append("False\n");
+                break;
+            case MESSAGE_USER_PRESENCE:
+                str = new string(LABEL_GUI_USER_PRESENCE+"=");
+                if (((MessageBool*)msg)->GetState())
+                    str->append("True\n");
+                else
+                    str->append("False\n");
+                break;
+            case MESSAGE_EMPTY:
+                str = new string(""); //empty string
+                break;
+            case MESSAGE_LOG:
+                str = new string(LABEL_GUI_LOG+"="+((MessageString*)msg)->GetString()+"\n");
+                break;
+            default:
+                str = new string(""); //empty string
+                break;
+        }
+    }
+    
+    return str;
 }
-
 
 /**
-	Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
-	une information de type float.
-	@params char * str : string qui doit être envoyé à l'affichage
-	@params char label : label de la donnée (voir format d'envoi)
-	@params float data : donnée
-	@params int indice : indice de tableau
-*/
-
-void add_info_float(unsigned char * str, char label, float data,int * indice ){
-	int ind= *indice;
-	float tampon=100000.05f + data;
-	unsigned char* f =(unsigned char*)&tampon;
-
-	str[ind ++] = '<';
-	str[ind ++] = label;
-	str[ind ++] = f[0];
-	str[ind ++] = f[1];
-	str[ind ++] = f[2];
-	str[ind ++] = f[3];
-	str[ind++] = '\n';
-	
-	*indice=ind;
-}
-
-/**
-	Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
-	une information de type int.
-	@params char * str : string qui doit être envoyé à l'affichage
-	@params char label : label de la donnée (voir format d'envoi)
-	@params int data : donnée
-	@params int indice : indice de tableau
-*/
-
-void add_info_int(unsigned char * str, char label, int data,int * indice ){
-	int ind= *indice;
-	float tampon=100000.05f + data;
-	unsigned char* f =(unsigned char*)&tampon;
-
-	str[ind ++] = '<';
-    	str[ind ++] = label;
-    	str[ind ++] = f[0];
-    	str[ind ++] = f[1];
-    	str[ind ++] = f[2];
-    	str[ind ++] = f[3];
-	str[ind++] = '\n';
-	
-	*indice=ind;
-}
-
+        Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
+        une information de type float.
+        @params char * str : string qui doit être envoyé à l'affichage
+        @params char label : label de la donnée (voir format d'envoi)
+        @params float data : donnée
+        @params int indice : indice de tableau
+ */
+//
+//void add_info_float(unsigned char * str, char label, float data, int * indice) {
+//    int ind = *indice;
+//    float tampon = 100000.05f + data;
+//    unsigned char* f = (unsigned char*) &tampon;
+//
+//    str[ind++] = '<';
+//    str[ind++] = label;
+//    str[ind++] = f[0];
+//    str[ind++] = f[1];
+//    str[ind++] = f[2];
+//    str[ind++] = f[3];
+//    str[ind++] = '\n';
+//
+//    *indice = ind;
+//}
 
 /**
-	Envoie une trame vers l'affichage
-	@params int sock : numéro de socket
-	@params char * msg : tableau de caractères à envoyer, maximum 256 caractères
-*/
-void send_trame(int sock, unsigned char * msg,int* indice){
-	int j =* indice ;
-	/* write a message to the server */
-	write(sock, msg, j);
-	*indice=0;
-}
+        Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
+        une information de type int.
+        @params char * str : string qui doit être envoyé à l'affichage
+        @params char label : label de la donnée (voir format d'envoi)
+        @params int data : donnée
+        @params int indice : indice de tableau
+ */
+//
+//void add_info_int(unsigned char * str, char label, int data, int * indice) {
+//    int ind = *indice;
+//    float tampon = 100000.05f + data;
+//    unsigned char* f = (unsigned char*) &tampon;
+//
+//    str[ind++] = '<';
+//    str[ind++] = label;
+//    str[ind++] = f[0];
+//    str[ind++] = f[1];
+//    str[ind++] = f[2];
+//    str[ind++] = f[3];
+//    str[ind++] = '\n';
+//
+//    *indice = ind;
+//}
+
+/**
+        Envoie une trame vers l'affichage
+        @params int sock : numéro de socket
+        @params char * msg : tableau de caractères à envoyer, maximum 256 caractères
+ */
+//void send_trame(int sock, unsigned char * msg, int* indice) {
+//    int j = *indice;
+//    /* write a message to the server */
+//    write(sock, msg, j);
+//    *indice = 0;
+//}

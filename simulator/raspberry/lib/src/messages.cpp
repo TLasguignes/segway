@@ -57,7 +57,7 @@ string Message::ToString() {
 }
 
 Message* Message::Copy() {
-    Message *msg = new Message(messageID);
+    Message *msg = new Message();
 
     return msg;
 }
@@ -69,7 +69,6 @@ bool Message::CheckID(MESSAGE_ID id) {
 }
 
 // class MessageFloat
-
 MessageFloat::MessageFloat() {
     value = 0.0;
 }
@@ -110,18 +109,17 @@ bool MessageFloat::CheckID(MESSAGE_ID id) {
 }
 
 // class MessageString
-
 MessageString::MessageString() {
     s=string("");
 }
 
-MessageString::MessageString(MESSAGE_ID id, float val) {
+MessageString::MessageString(MESSAGE_ID id, string s) {
     MessageString::SetID(id);
         
-    this->
+    this->s = s;
 }
 
-void MessageFloat::SetID(MESSAGE_ID id) {
+void MessageString::SetID(MESSAGE_ID id) {
     if (CheckID(id))
         messageID = id;
     else
@@ -146,16 +144,19 @@ bool MessageString::CheckID(MESSAGE_ID id) {
 }
 
 // class MessageBool
-
 MessageBool::MessageBool() {
     state=false;
 }
 
 MessageBool::MessageBool(MESSAGE_ID id, bool state) {
-    if (CheckID(id)) {
+    MessageBool::SetID(id);
+    
+    this->state = state;
+}
+
+void MessageBool::SetID(MESSAGE_ID id) {
+    if (CheckID(id))
         messageID = id;
-        this->state = state;
-    }
     else
         throw std::runtime_error{"Invalid message id"};
 }

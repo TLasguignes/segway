@@ -78,7 +78,7 @@ namespace SegwayUI
             {
                 angularPositionWidget.CurrentValue = value;
                 AngularPositionInvalid = false;
-                angularPositionTimer.Start();
+                //angularPositionTimer.Start();
             }
         }
 
@@ -107,7 +107,7 @@ namespace SegwayUI
             {
                 betaAngleWidget.CurrentValue = value;
                 BetaAngleInvalid = false;
-                betaAngleTimer.Start();
+                //betaAngleTimer.Start();
             }
         }
 
@@ -136,7 +136,7 @@ namespace SegwayUI
             {
                 angularSpeedWidget.CurrentValue = value;
                 AngularSpeedInvalid = false;
-                angularSpeedTimer.Start();
+                //angularSpeedTimer.Start();
             }
         }
 
@@ -165,7 +165,7 @@ namespace SegwayUI
             {
                 batteryLevelWidget.Value = value;
                 BatteryLevelInvalid = false;
-                batteryLevelTimer.Start();
+                //batteryLevelTimer.Start();
             }
         }
 
@@ -194,7 +194,7 @@ namespace SegwayUI
             {
                 linearSpeedWidget.CurrentValue = value;
                 LinearSpeedInvalid = false;
-                linearSpeedTimer.Start();
+                //linearSpeedTimer.Start();
             }
         }
 
@@ -223,7 +223,7 @@ namespace SegwayUI
             {
                 torqueWidget.CurrentValue = value;
                 TorqueInvalid = false;
-                torqueTimer.Start();
+                //torqueTimer.Start();
             }
         }
 
@@ -252,7 +252,7 @@ namespace SegwayUI
             {
                 userPresenceWidget.Value = value;
                 UserPresenceInvalid = false;
-                userPresenceTimer.Start();
+                //userPresenceTimer.Start();
             }
         }
 
@@ -281,7 +281,7 @@ namespace SegwayUI
             {
                 emergencyStopWidget.Value = value;
                 EmergencyStopInvalid = false;
-                emergencyStopTimer.Start();
+                //emergencyStopTimer.Start();
             }
         }
 

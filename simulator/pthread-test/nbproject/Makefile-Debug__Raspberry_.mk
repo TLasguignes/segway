@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug__Raspberry_
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/db41d586/comgui.o \
 	${OBJECTDIR}/_ext/db41d586/comstm32.o \
 	${OBJECTDIR}/_ext/db41d586/messages.o \
 	${OBJECTDIR}/_ext/db41d586/parameters.o \
@@ -65,25 +66,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pthread-test: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pthread-test ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/_ext/db41d586/comgui.o: ../raspberry/lib/src/comgui.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comgui.o ../raspberry/lib/src/comgui.cpp
+
 ${OBJECTDIR}/_ext/db41d586/comstm32.o: ../raspberry/lib/src/comstm32.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D__FOR_PC__ -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comstm32.o ../raspberry/lib/src/comstm32.cpp
+	$(COMPILE.cc) -g -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comstm32.o ../raspberry/lib/src/comstm32.cpp
 
 ${OBJECTDIR}/_ext/db41d586/messages.o: ../raspberry/lib/src/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D__FOR_PC__ -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/messages.o ../raspberry/lib/src/messages.cpp
+	$(COMPILE.cc) -g -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/messages.o ../raspberry/lib/src/messages.cpp
 
 ${OBJECTDIR}/_ext/db41d586/parameters.o: ../raspberry/lib/src/parameters.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D__FOR_PC__ -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/parameters.o ../raspberry/lib/src/parameters.cpp
+	$(COMPILE.cc) -g -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/parameters.o ../raspberry/lib/src/parameters.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D__FOR_PC__ -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D__WITH_PTHREAD__ -I../raspberry/lib/inc -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

@@ -50,7 +50,8 @@ public:
     virtual Message* Copy();
    
     MESSAGE_ID GetID() { return messageID; }
-        
+    virtual void SetID(MESSAGE_ID id) {}
+    
     bool operator==(const Message& msg) {
         return (messageID == msg.messageID);
     }

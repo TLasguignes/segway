@@ -53,7 +53,9 @@ namespace SegwayUI
                 if (this.value > 100.0) this.value = 100.0;
                 if (this.value < 0.0) this.value = 0.0;
 
-                UpdateDisplay();
+                Gtk.Application.Invoke(delegate {
+                    UpdateDisplay();
+                });
             }
         }
 
@@ -70,7 +72,9 @@ namespace SegwayUI
             {
                 invalid = value;
 
-                UpdateDisplay();
+                Gtk.Application.Invoke(delegate {
+                    UpdateDisplay();
+                });
             }
         }
 

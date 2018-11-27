@@ -48,7 +48,9 @@ namespace SegwayUI
             {
                 this.value = value;
 
-                UpdateDisplay();
+                Gtk.Application.Invoke(delegate {
+                    UpdateDisplay();
+                });
             }
         }
 
@@ -64,7 +66,9 @@ namespace SegwayUI
             {
                 invalid = value;
 
-                UpdateDisplay();
+                Gtk.Application.Invoke(delegate {
+                    UpdateDisplay();
+                });
             }
         }
 

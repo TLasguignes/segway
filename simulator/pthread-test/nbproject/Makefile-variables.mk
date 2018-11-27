@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/pthread-test
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
 CND_PACKAGE_NAME_Release=pthread-test.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/pthread-test.tar
+# Debug__Raspberry_ configuration
+CND_PLATFORM_Debug__Raspberry_=GNU-Linux
+CND_ARTIFACT_DIR_Debug__Raspberry_=dist/Debug__Raspberry_/GNU-Linux
+CND_ARTIFACT_NAME_Debug__Raspberry_=pthread-test
+CND_ARTIFACT_PATH_Debug__Raspberry_=dist/Debug__Raspberry_/GNU-Linux/pthread-test
+CND_PACKAGE_DIR_Debug__Raspberry_=dist/Debug__Raspberry_/GNU-Linux/package
+CND_PACKAGE_NAME_Debug__Raspberry_=pthread-test.tar
+CND_PACKAGE_PATH_Debug__Raspberry_=dist/Debug__Raspberry_/GNU-Linux/package/pthread-test.tar
 #
 # include compiler specific variables
 #

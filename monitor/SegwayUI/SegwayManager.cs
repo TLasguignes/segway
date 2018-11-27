@@ -36,6 +36,7 @@ namespace SegwayUI
         public const string BetaAngle = "Beta";
         public const string Torque = "Torque";
         public const string EmergencyStop = "Emergency";
+        public const string Log = "Log";
     }
 
     /// <summary>

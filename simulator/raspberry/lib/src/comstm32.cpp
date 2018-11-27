@@ -7,6 +7,12 @@
 
 #include "comstm32.h"
 
+#include <stdio.h>
+#include <stdlib.h> 
+#include <unistd.h>
+#include <fcntl.h>
+#include <termios.h>  
+
 /**
         Initialize the serial port in order to send and receive messages through it
         @returns: the file descriptor, or -1 if there was an error. 
@@ -14,12 +20,29 @@
 
  */
 
-int uart0_filestream;
+#define MESSAGE_SERIAL_LENGTH 37
+#define MESSAGE_TIMEOUT_NS 2000
 
-int init_serial() {
+#ifdef __FOR_PC__
+#define USART_FILENAME "/dev/ttyUSB0"
+#else
+#define USART_FILENAME "/dev/ttyS0"
+#endif /* __FOR_PC__ */
 
-    uart0_filestream = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY); //Open in non blocking read/write mode
-    if (uart0_filestream == -1) {
+enum LABEL_STM32 {
+    LABEL_ANGLE_POSITION = 'p',
+    LABEL_ANGULAR_SPEED = 's',
+    LABEL_BATTERY_LEVEL = 'b',
+    LABEL_BETA_ANGLE = 'v',
+    LABEL_USER_PRESENCE = 'u',
+
+    LABEL_TORQUE = 'c',
+    LABEL_EMERGENCY_STOP = 'a'
+};
+
+int ComStm32::Open() {
+    fd = open(USART_FILENAME, O_RDWR | O_NOCTTY /*| O_NDELAY*/); //Open in non blocking read/write mode
+    if (fd == -1) {
         //ERROR - CAN'T OPEN SERIAL PORT
         printf("Error - Unable to open UART.  Ensure it is not in use by another application\n");
         exit(EXIT_FAILURE);
@@ -27,109 +50,156 @@ int init_serial() {
 
     //Configuration of the serial port 115 520 Bauds
     struct termios options;
-    tcgetattr(uart0_filestream, &options);
+    tcgetattr(fd, &options);
     options.c_cflag = B115200 | CS8 | CLOCAL | CREAD; //<Set baud rate
     options.c_iflag = IGNPAR; // ignores bytes with bad parity
     options.c_oflag = 0;
     options.c_lflag = 0;
-    tcflush(uart0_filestream, TCIFLUSH);
-    tcsetattr(uart0_filestream, TCSANOW, &options);
-    return uart0_filestream;
+    tcflush(fd, TCIFLUSH);
+    tcsetattr(fd, TCSANOW, &options);
+
+    return fd;
+}
+
+int ComStm32::Close() {
+    return close(fd);
+}
+
+/**
+        Reads a message from the serial port. 
+        The function is blocked until a suitable message is received. 
+ */
+Message* ComStm32::Read() {
+    int rxLength;
+    unsigned char rxBuffer[6];
+    unsigned char receivedChar;
+    bool messageComplete = false;
+    Message *msg;
+    unsigned int i;
+
+    /* Call pre method for read */
+    Read_Pre();
+
+    lostCom = false;
+    /* a message is composed of 7 bytes.
+                the byte 0 should always be '<'
+                the byte 1 should be an ascii char that is the label. It define what the data represent
+                the bytes 2 to 5 are the float value
+                the byte 6 should always be a '\n'
+     */
+    while (messageComplete == false) {
+        rxLength = read(this->fd, (void*) &receivedChar, 1); //Filestream, buffer to store in, number of bytes to read (max)
+        //printf ("W=%02X ", receivedChar);
+
+        if (rxLength <= -1) {
+            this->lostCom = true;
+            printf("Lost Com");
+            msg = new Message();
+
+            return msg;
+        } else if (rxLength == 0) {
+            // nothing to do
+        } else if (receivedChar == '<') { // start of frame received
+            //printf ("received Start\n");
+            i = 0;
+
+            do {
+                rxLength = read(this->fd, (void*) &rxBuffer[i], 6 - i); //Filestream, buffer to store in, number of bytes to read (max)
+
+                if (rxLength >= 0)
+                    i = i + rxLength;
+                else {
+                    printf("Error while reading (%i)", rxLength);
+
+                    return NULL;
+                }
+            }            while (i < 6);
+
+            //printf ("data received (%i)\n", rxLength);
+
+            if (rxBuffer[5] == '\n') {
+                messageComplete = true;
+            }
+        }
+    }
+
+    /* Treatment of received message */
+    msg = CharToMessage(rxBuffer);
+
+    /* Call Post method for read */
+    Read_Post();
+
+    return msg;
 }
 
 /**
         Takes an array of 7 bytes and tries to format it to a message structure
 
-        @params unsigned char * mesg : an array of 7 bytes.
-                the byte 0 should always be '<'
-                the byte 1 should be an ascii char that is the label. It define what the data represent
-                the bytes 2 to 5 are the float value
-                the byte 6 should always be a '\n'
+        @params unsigned char * mesg : an array of 6 bytes.
+                the byte 0 should be an ascii char that is the label. It define what the data represent
+                the bytes 1 to 4 are the float value
+                the byte 5 should always be a '\n'
         @params message_serial * m : a pointer of a message. If there was an issue when reading the serial port
                 the message takes 'e' (for error) as its label
 
         @returns 0 if there was an issue while reading the message else 1
  */
 
-int bytes_to_array_of_message(unsigned char * mesg, message_serial *m) {
+Message* ComStm32::CharToMessage(unsigned char *bytes) {
 
-    int ret = 0;
-    int i, y = 0;
+    Message *msg = __null;
+    MessageFloat *msgf;
+    MessageBool *msgb;
 
-    for (y = 0; y < 35; y = y + 7) {
-        if (mesg[y] == '<' && mesg[y + 6] == '\n') {
-            m[y / 7].label = mesg[y + 1];
-            m[y / 7].value = bytes_to_float(&mesg[y + 2]);
-            ret = 1;
-        } else {
-            m[y / 7].label = 'e';
-            ret = 0;
-        }
+    switch (bytes[0]) {
+        case LABEL_ANGLE_POSITION:
+            msgf = new MessageFloat();
+            msgf->SetID(MESSAGE_ANGLE_POSITION);
+            msgf->SetValue(CharToFloat(&bytes[1]));
+            msg = (Message*) msgf;
+
+            break;
+        case LABEL_ANGULAR_SPEED:
+            msgf = new MessageFloat();
+            msgf->SetID(MESSAGE_ANGULAR_SPEED);
+            msgf->SetValue(CharToFloat(&bytes[1]));
+            msg = (Message*) msgf;
+
+            break;
+        case LABEL_BATTERY_LEVEL:
+            msgf = new MessageFloat();
+            msgf->SetID(MESSAGE_BATTERY);
+            msgf->SetValue(CharToFloat(&bytes[1]));
+            msg = (Message*) msgf;
+
+            break;
+        case LABEL_BETA_ANGLE:
+            msgf = new MessageFloat();
+            msgf->SetID(MESSAGE_BETA);
+            msgf->SetValue(CharToFloat(&bytes[1]));
+            msg = (Message*) msgf;
+
+            break;
+        case LABEL_USER_PRESENCE:
+            msgb = new MessageBool();
+            msgb->SetID(MESSAGE_USER_PRESENCE);
+            msgb->SetState(CharToBool(&bytes[1]));
+            msg = (Message*) msgb;
+
+            break;
+        default:
+            printf("Unknown message received from STM32 (%i)\n", bytes[0]);
+            fflush(stdout);
+            msg = new Message();
     }
-    return ret;
-}
 
-/**
-        Converts a float into a byte sequence that is sent on the serial port 
-        the message is '<'{tag}{the float encoded on 4 bytes}'\n
-
-        @params float fl_value : The value to send
-        @params char tag : the tag that define what the value represents.  
-	
-        @return 1 if the message was sent, else 0
- */
-int send_float_to_serial(float fl_value, char label) {
-
-    unsigned char * msg = (unsigned char *) &fl_value;
-    int ret_val = 0;
-    unsigned char tx_buffer[MESSAGE_SERIAL_LENGTH];
-    unsigned char * p_tx_buffer;
-    p_tx_buffer = &tx_buffer[0];
-    *p_tx_buffer++ = '<';
-    *p_tx_buffer++ = label;
-    *p_tx_buffer++ = msg[0];
-    *p_tx_buffer++ = msg[1];
-    *p_tx_buffer++ = msg[2];
-    *p_tx_buffer++ = msg[3];
-    *p_tx_buffer++ = '\n';
-
-    if (uart0_filestream != -1) {
-        int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0])); //Filestream, bytes to write, number of bytes to write
-        if (count < 0) {
-            printf("UART TX error\n");
-        } else {
-            ret_val = 1;
-        }
+    if (msg == NULL) {
+        printf("Message is null (%02X)\n", bytes[0]);
+        fflush(stdout);
+        msg = new Message();
     }
-    return ret_val;
-}
 
-int send_int_to_serial(int int_value, char label) {
-
-    float tampon = int_value;
-    unsigned char * msg = (unsigned char *) &tampon;
-    int ret_val = 0;
-    unsigned char tx_buffer[MESSAGE_SERIAL_LENGTH];
-    unsigned char * p_tx_buffer;
-    p_tx_buffer = &tx_buffer[0];
-
-    *p_tx_buffer++ = '<';
-    *p_tx_buffer++ = label;
-    *p_tx_buffer++ = msg[0];
-    *p_tx_buffer++ = msg[1];
-    *p_tx_buffer++ = msg[2];
-    *p_tx_buffer++ = msg[3];
-    *p_tx_buffer++ = '\n';
-
-    if (uart0_filestream != -1) {
-        int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0])); //Filestream, bytes to write, number of bytes to write
-        if (count < 0) {
-            printf("UART TX error\n");
-        } else {
-            ret_val = 1;
-        }
-    }
-    return ret_val;
+    return msg;
 }
 
 /**
@@ -140,132 +210,124 @@ int send_int_to_serial(int int_value, char label) {
         @return the float value
  */
 
-float bytes_to_float(unsigned char * bytes) {
+float ComStm32::CharToFloat(unsigned char *bytes) {
     unsigned long value;
-    value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
-    return *(float *) &value;
-}
+    union {
+        unsigned char buffer[4];
+        float f;
+    } convert;
 
+    convert.buffer[0]=bytes[0];
+    convert.buffer[1]=bytes[1];
+    convert.buffer[2]=bytes[2];
+    convert.buffer[3]=bytes[3];
+    
+    //value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
+
+    return convert.f;
+}
 
 /**
-        Reads a message from the serial port. 
-        The function is blocked until a suitable message is received. 
+        Converts an array of 4 bytes into a float
+
+        @params unsigned char * bytes : array of 4 bytes
+
+        @return the float value
  */
-int lost_com = 0;
 
-message_serial* read_from_serial() {
+unsigned int ComStm32::CharToInt(unsigned char *bytes) {
+    unsigned long value;
 
-    int message_length = 0;
-    unsigned char message_buffer[256];
-    static message_serial m[5];
-    int i, j, pass = 0;
-    long k = 0;
-    int passtotal = 0;
-    while (passtotal == 0) {
-        // Read up to 255 characters from the port if they are there
-        unsigned char rx_buffer[256];
-        int rx_length = read(uart0_filestream, (void*) rx_buffer, MESSAGE_SERIAL_LENGTH - j); //Filestream, buffer to store in, number of bytes to read (max)
-        k++;
-        if (rx_length < 0) {
-            //rt_printf("Error when checking for rx bytes\n");
-        } else if (rx_length == 0) {
-            //rt_printf("No data is available");
+    value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
+
+    return (unsigned int)value;
+}
+
+/**
+        Converts an array of 4 bytes into a float
+
+        @params unsigned char * bytes : array of 4 bytes
+
+        @return the float value
+ */
+
+bool ComStm32::CharToBool(unsigned char *bytes) {
+    unsigned long value;
+
+    value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
+
+    if (value == 0) return false;
+
+    else return true;
+}
+
+int ComStm32::Write(Message* msg) {
+    unsigned char buffer[7];
+    int ret_val = 0;
+
+    MessageToChar(msg, buffer);
+
+    Write_Pre();
+
+//    printf ("Message to send: %s\n", msg->ToString().c_str());
+//    printf ("Message converted: ");
+//    for (int i=0; i<7; i++)
+//    {
+//        printf ("%02X ", buffer[i]);
+//    }
+//    printf ("\n");
+//    fflush(stdout);
+    
+    if (this->fd != -1) {
+        int count = write(this->fd, &buffer[0], 7); //Filestream, bytes to write, number of bytes to write
+        if (count < 0) {
+            printf("UART TX error\n");
         } else {
-            lost_com = 0;
-            k = 0;
-            for (i = 0; i < rx_length; i++) {
-                if (pass == 1) {
-                    if (rx_buffer[i] == 'X') {
-                        pass = 0;
-                        passtotal = 1;
-                    } else {
-                        message_buffer[j] = rx_buffer[i];
-                        j++;
-                    }
-                }
-                else if (rx_buffer[i] == 'R') {
-                    j = 0;
-                    pass = 1;
-                }
-            }
-        } //else
-
-        if (k > 10000) {
-            k = 0;
-            printf("Perte de connexion\n");
-            passtotal = 1;
-            lost_com = 1;
-        }
-
-    }//while passtotal
-
-    bytes_to_array_of_message(message_buffer, m);
-    return m;
-}
-
-int close_serial() {
-    return close(uart0_filestream);
-}
-
-void write_trame_to_data(message_serial *m) {
-    int i;
-    for (i = 0; i < 5; i++) {
-        switch ((m + i)->label) {
-            case 'p':
-#ifndef __WITH_PTHREAD__
-                rt_mutex_acquire(&var_mutex_etat_angle, TM_INFINITE);
-#endif /* __WITH_PTHREAD__ */
-                etat_angle.set_angle((m + i)->value);
-#ifndef __WITH_PTHREAD__
-                rt_mutex_release(&var_mutex_etat_angle);
-#endif /* __WITH_PTHREAD__ */
-
-                break;
-            case 's':
-#ifndef __WITH_PTHREAD__               
-                rt_mutex_acquire(&var_mutex_etat_angle, TM_INFINITE);
-#endif /* __WITH_PTHREAD__ */
-                etat_angle.set_vitesse_ang((m + i)->value);
-#ifndef __WITH_PTHREAD__
-                rt_mutex_release(&var_mutex_etat_angle);
-#endif /* __WITH_PTHREAD__ */
-
-                break;
-            case 'b':
-#ifndef __WITH_PTHREAD__
-                rt_mutex_acquire(&var_mutex_batterie, TM_INFINITE);
-#endif /* __WITH_PTHREAD__ */
-                batterie.set_level((int) ((m + i)->value));
-#ifndef __WITH_PTHREAD__
-                rt_mutex_release(&var_mutex_batterie);
-#endif /* __WITH_PTHREAD__ */
-
-                break;
-            case 'v':
-#ifndef __WITH_PTHREAD__
-                rt_mutex_acquire(&var_mutex_beta, TM_INFINITE);
-#endif /* __WITH_PTHREAD__ */
-                beta.set_beta((m + i)->value);
-#ifndef __WITH_PTHREAD__
-                rt_mutex_release(&var_mutex_beta);
-#endif /* __WITH_PTHREAD__ */
-
-                break;
-            case 'u':
-#ifndef __WITH_PTHREAD__
-                rt_mutex_acquire(&var_mutex_presence_user, TM_INFINITE);
-#endif /* __WITH_PTHREAD__ */
-                presence_user = (int) (m + i)->value;
-#ifndef __WITH_PTHREAD__
-                rt_mutex_release(&var_mutex_presence_user);
-#endif /* __WITH_PTHREAD__ */
-
-                break;
-                printf("Unknown message type : tag '%c'\n", (m + i)->label);
+            ret_val = 1;
         }
     }
+
+    // deallocation of msg
+    delete(msg);
+    
+    Write_Post();
+
+    return ret_val;
 }
 
+void ComStm32::MessageToChar(Message *msg, unsigned char *buffer) {
+    float val_f;
+    int val_i;
+    unsigned char *b;
 
+    buffer[0] = '<';
+    buffer[6] = '\n';
+    
+    switch (msg->GetID()) {
+        case MESSAGE_TORQUE:
+            buffer[1] = LABEL_TORQUE;
+            val_f = ((MessageFloat*) msg)->GetValue();
+            b = (unsigned char *) &val_f;
 
+            break;
+        case MESSAGE_EMERGENCY_STOP:
+            buffer[1] = LABEL_EMERGENCY_STOP;
+            if (((MessageBool*) msg)->GetState())
+                val_i = 1;
+            else
+                val_i = 0;
+            b = (unsigned char *) &val_i;
+
+            break;
+        default:
+            printf("Invalid message to send");
+            val_i = 0;
+            b = (unsigned char *) &val_i;
+    }
+
+    buffer[2] = b[0];
+    buffer[3] = b[1];
+    buffer[4] = b[2];
+    buffer[5] = b[3];
+}
 

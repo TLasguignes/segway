@@ -15,24 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
   * \author INSA Toulouse
   * \version 1.0
   * \date 20 Juillet 2017
   */
 
-#ifndef __LIB_MSG_GUI_H__
-#define __LIB_MSG_GUI_H__
+#ifndef __COMGUI_H__
+#define __COMGUI_H__
+
+#include "messages.h"
+#include <string>
 
 #define PORT_GUI 8000 /* server's port */
 #define PORT_LOG 8001
 
 using namespace std;
-        
-int init_socket(int port);
-void add_info_float(unsigned char * str, char label, float data,int *indice);
-void add_info_int(unsigned char * str, char label, int data,int *indice);
-void send_trame(int sock, unsigned char * msg,int* indice);
+     
+class ComGui {
+public:
+    ComGui() {}
+    virtual ~ComGui() {}
+    
+    int Open(int port);
+    void Close();
+    int AcceptClient();
+    
+    void Write(Message* msg);
+    
+    virtual void Write_Pre() {}
+    virtual void Write_Post() {}
+protected:
+    int socketFD = -1;
+    int clientID = -1;
+    
+    string *MessageToString(Message *msg);
+    //void add_info_float(unsigned char * str, char label, float data,int *indice);
+    //void add_info_int(unsigned char * str, char label, int data,int *indice);
+    //void send_trame(int sock, unsigned char * msg,int* indice);
+};
 
-#endif /* __LIB_MSG_GUI_H__ */
+#endif /* __COMGUI_H__ */

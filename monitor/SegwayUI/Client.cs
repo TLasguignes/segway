@@ -23,6 +23,8 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 
+using System.Threading;
+            
 namespace SegwayUI
 {
     /// <summary>
@@ -33,8 +35,8 @@ namespace SegwayUI
         /// <summary>
         /// Default server name
         /// </summary>
-        //public const string defaultIP = "10.105.0.64";
-        public const string defaultIP = "localhost";
+        public const string defaultIP = "10.105.0.64";
+        //public const string defaultIP = "localhost";
 
         /// <summary>
         /// Default server port number
@@ -52,35 +54,25 @@ namespace SegwayUI
         private static NetworkStream stream = null;
 
         /// <summary>
-        /// Size of internal buffer used when reading data from server
-        /// </summary>
-        private const int BufferMaxSize = 512;
-
-        /// <summary>
-        /// Internal buffer used when reading data from server
-        /// </summary>
-        private static byte[] buffer = new byte[BufferMaxSize];
-
-        /// <summary>
         /// buffer containing received message from TCP server
         /// Used to concatenate internal buffers into one
         /// </summary>
         private static byte[] receiveBuffer;
 
-        private static int initialReceiveBufferIndex = 0;
-
         /// <summary>
         /// String containing received message from tcp server
         /// </summary>
         private static StringBuilder message = new StringBuilder();
-        private static int newLength = 1;
-        private static int packetCounter = 0;
+      
 
         /// <summary>
         /// Callback to send received message to upper level
         /// </summary>
         public delegate void ReadEvent(string msg, byte[] buffer);
         public static ReadEvent readEvent = null;
+
+
+        private static Thread readThread;
 
         /// <summary>
         /// Open connection to server "host", on default port number.
@@ -115,7 +107,13 @@ namespace SegwayUI
 
                 // received data are stored in buffer
                 // Next reading will be done in ReadCallback method
-                stream.BeginRead(buffer, 0, newLength, new AsyncCallback(ReadCallback), message);
+
+                //stream.BeginRead(buffer, 0, newLength, new AsyncCallback(ReadCallback), message);
+
+                // Start reading thread
+                message.Clear();
+                readThread = new Thread(new ThreadStart(ReadCallback));
+                readThread.Start();
             }
             catch (ArgumentNullException e)
             {
@@ -149,68 +147,49 @@ namespace SegwayUI
         /// Callback call by stream.BeginRead after reception of newLength data
         /// </summary>
         /// <param name="ar">Not sure of what is it, but needed for terminate reading</param>
-        private static void ReadCallback(IAsyncResult ar)
+        private static void ReadCallback()
         {
-            if (client.Connected)
-            {
-                int bytesRead;
+            char character;
+            int data;
 
+            while (client.Connected)
+            {
                 try
                 {
-                    // Termintae read operation, and get number of byte stored in buffer
-                    bytesRead = stream.EndRead(ar);
+                    data = stream.ReadByte();
                 }
                 catch (ObjectDisposedException e)
                 {
                     Console.WriteLine("Connection to server dropped: " + e.ToString());
                     return;
                 }
-
-                newLength = 1;
-
-                // if number of byte read is not 0, concatenate string and buffer
-                if (bytesRead > 0)
+                catch (System.IO.IOException e)
                 {
-                    packetCounter++;
+                    Console.WriteLine("Connection to server dropped: " + e.ToString());
+                    return;
+                }
 
-                    if (packetCounter >= 3)
+                if (data>=0) // a data was read
+                {
+                    character = (char)data;
+
+                    if (character != '\n')
                     {
-                        //Console.WriteLine("Supplementary packet " + packetCounter);
+                        message.Append(character); 
+
+                        if (receiveBuffer == null) receiveBuffer = new byte[1];
+                        else Array.Resize<byte>(ref receiveBuffer, receiveBuffer.Length + 1); // resize currrent buffer
+
+                        receiveBuffer[receiveBuffer.Length - 1] = (byte)data;
                     }
+                    else // end of string found
+                    {
+                        readEvent?.Invoke(message.ToString(), receiveBuffer);
 
-                    // Append new data to current string (expecting data are ascii)
-                    message.Append(Encoding.ASCII.GetString(buffer, 0, bytesRead));
-
-                    // Similarly, append received bytes to current buffer 
-                    if (receiveBuffer == null) receiveBuffer = new byte[bytesRead];
-                    else Array.Resize<byte>(ref receiveBuffer, initialReceiveBufferIndex + bytesRead); // resize currrent buffer
-
-                    System.Buffer.BlockCopy(buffer, 0, receiveBuffer, initialReceiveBufferIndex, bytesRead); // and add received data
-                    initialReceiveBufferIndex = receiveBuffer.Length; // move last index of current buffer
+                        message.Clear();
+                        receiveBuffer = null;
+                    }
                 }
-
-                // if it remains received data, prepare for a new reading (get another buffer to append to current one)
-                if (client.Available > 0)
-                {
-                    newLength = client.Available;
-                    if (newLength > BufferMaxSize) newLength = BufferMaxSize;
-                    else newLength = client.Available;
-                }
-                else
-                {
-                    // no more data to read, buffer and string can be send to upper level
-                    readEvent?.Invoke(message.ToString(), receiveBuffer);
-
-                    message.Clear();
-                    receiveBuffer = null;
-                    initialReceiveBufferIndex = 0;
-                    packetCounter = 0;
-                }
-
-                // Prepare for reading new data
-                if (newLength> BufferMaxSize) newLength = BufferMaxSize;
-                if (newLength <= 0) newLength = 1;
-                stream.BeginRead(buffer, 0, newLength, new AsyncCallback(ReadCallback), message);
             }
         }
 
