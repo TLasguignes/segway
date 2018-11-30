@@ -64,7 +64,7 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.DrawingArea" id="drawingareaAngle">
+                  <widget class="Gtk.DrawingArea" id="drawingareaBeta">
                     <property name="MemberName" />
                   </widget>
                   <packing>
@@ -80,7 +80,7 @@
                     <property name="RowSpacing">6</property>
                     <property name="ColumnSpacing">6</property>
                     <child>
-                      <widget class="Gtk.DrawingArea" id="drawingareaAngularSpeed">
+                      <widget class="Gtk.DrawingArea" id="drawingareaAngle">
                         <property name="MemberName" />
                       </widget>
                       <packing>
@@ -94,12 +94,10 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="Gtk.DrawingArea" id="drawingareaBeta">
+                      <widget class="Gtk.DrawingArea" id="drawingareaAngularSpeed">
                         <property name="MemberName" />
                       </widget>
                       <packing>
-                        <property name="TopAttach">1</property>
-                        <property name="BottomAttach">2</property>
                         <property name="LeftAttach">1</property>
                         <property name="RightAttach">2</property>
                         <property name="AutoSize">True</property>
@@ -116,6 +114,8 @@
                         <property name="MemberName" />
                       </widget>
                       <packing>
+                        <property name="TopAttach">1</property>
+                        <property name="BottomAttach">2</property>
                         <property name="LeftAttach">1</property>
                         <property name="RightAttach">2</property>
                         <property name="AutoSize">True</property>

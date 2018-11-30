@@ -19,13 +19,13 @@ public partial class MainWindow
 
 	private global::Gtk.VBox vboxJauges;
 
-	private global::Gtk.DrawingArea drawingareaAngle;
+	private global::Gtk.DrawingArea drawingareaBeta;
 
 	private global::Gtk.Table table3;
 
-	private global::Gtk.DrawingArea drawingareaAngularSpeed;
+	private global::Gtk.DrawingArea drawingareaAngle;
 
-	private global::Gtk.DrawingArea drawingareaBeta;
+	private global::Gtk.DrawingArea drawingareaAngularSpeed;
 
 	private global::Gtk.DrawingArea drawingareaLinearSpeed;
 
@@ -122,10 +122,10 @@ public partial class MainWindow
 		this.vboxJauges.Name = "vboxJauges";
 		this.vboxJauges.Spacing = 6;
 		// Container child vboxJauges.Gtk.Box+BoxChild
-		this.drawingareaAngle = new global::Gtk.DrawingArea();
-		this.drawingareaAngle.Name = "drawingareaAngle";
-		this.vboxJauges.Add(this.drawingareaAngle);
-		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vboxJauges[this.drawingareaAngle]));
+		this.drawingareaBeta = new global::Gtk.DrawingArea();
+		this.drawingareaBeta.Name = "drawingareaBeta";
+		this.vboxJauges.Add(this.drawingareaBeta);
+		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vboxJauges[this.drawingareaBeta]));
 		w3.Position = 0;
 		// Container child vboxJauges.Gtk.Box+BoxChild
 		this.table3 = new global::Gtk.Table(((uint)(2)), ((uint)(2)), false);
@@ -133,16 +133,14 @@ public partial class MainWindow
 		this.table3.RowSpacing = ((uint)(6));
 		this.table3.ColumnSpacing = ((uint)(6));
 		// Container child table3.Gtk.Table+TableChild
+		this.drawingareaAngle = new global::Gtk.DrawingArea();
+		this.drawingareaAngle.Name = "drawingareaAngle";
+		this.table3.Add(this.drawingareaAngle);
+		// Container child table3.Gtk.Table+TableChild
 		this.drawingareaAngularSpeed = new global::Gtk.DrawingArea();
 		this.drawingareaAngularSpeed.Name = "drawingareaAngularSpeed";
 		this.table3.Add(this.drawingareaAngularSpeed);
-		// Container child table3.Gtk.Table+TableChild
-		this.drawingareaBeta = new global::Gtk.DrawingArea();
-		this.drawingareaBeta.Name = "drawingareaBeta";
-		this.table3.Add(this.drawingareaBeta);
-		global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table3[this.drawingareaBeta]));
-		w5.TopAttach = ((uint)(1));
-		w5.BottomAttach = ((uint)(2));
+		global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table3[this.drawingareaAngularSpeed]));
 		w5.LeftAttach = ((uint)(1));
 		w5.RightAttach = ((uint)(2));
 		// Container child table3.Gtk.Table+TableChild
@@ -150,6 +148,8 @@ public partial class MainWindow
 		this.drawingareaLinearSpeed.Name = "drawingareaLinearSpeed";
 		this.table3.Add(this.drawingareaLinearSpeed);
 		global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table3[this.drawingareaLinearSpeed]));
+		w6.TopAttach = ((uint)(1));
+		w6.BottomAttach = ((uint)(2));
 		w6.LeftAttach = ((uint)(1));
 		w6.RightAttach = ((uint)(2));
 		// Container child table3.Gtk.Table+TableChild

@@ -36,15 +36,15 @@ public partial class MainWindow : Gtk.Window
 
         globalVariables = new GlobalVariables();
 
-        globalVariables.AngularPositionWidget = new JaugeWidget(drawingareaAngle, "Angular Position (rad)", -Math.PI, Math.PI);
+        globalVariables.AngularPositionWidget = new JaugeWidget(drawingareaAngle, "Angular Position (rad)", -35*Math.PI/180, 35*Math.PI/180);
         globalVariables.AngularPositionWidget.FillColor = new Cairo.Color(0.1, 0.8, 0.3);
         globalVariables.AngularPosition = 0;
 
-        globalVariables.TorqueWidget = new JaugeWidget(drawingareaTorque, "Torque (N.m)", 0, 20);
+        globalVariables.TorqueWidget = new JaugeWidget(drawingareaTorque, "Torque (N.m)", -15, 15);
         globalVariables.TorqueWidget.FillColor = new Cairo.Color(0.8, 0.0, 0.3); 
         globalVariables.Torque = 0.0;
 
-        globalVariables.AngularSpeedWidget = new JaugeWidget(drawingareaAngularSpeed, "Angular Speed (rad/s)", 0, Math.PI*10);
+        globalVariables.AngularSpeedWidget = new JaugeWidget(drawingareaAngularSpeed, "Angular Speed (rad/s)", -Math.PI, Math.PI);
         globalVariables.AngularSpeedWidget.FillColor = new Cairo.Color(0.5, 0.5, 0.0); 
         globalVariables.AngularSpeed = 0.0;
 
@@ -52,7 +52,7 @@ public partial class MainWindow : Gtk.Window
         globalVariables.LinearSpeedWidget.FillColor = new Cairo.Color(0.8, 0.2, 0.2);
         globalVariables.LinearSpeed = 0;  
 
-        globalVariables.BetaAngleWidget = new JaugeWidget(drawingareaBeta, "Beta Angle (rad)", -Math.PI/4, Math.PI/4);
+        globalVariables.BetaAngleWidget = new JaugeWidget(drawingareaBeta, "User Angle \"Beta\" (rad)", -35*Math.PI/180, 35*Math.PI/180);
         globalVariables.BetaAngleWidget.FillColor = new Cairo.Color(0.1, 0.1, 0.7);
         globalVariables.BetaAngle = 0.0;
 

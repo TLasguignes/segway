@@ -83,7 +83,7 @@ void MessageFloat::SetID(MESSAGE_ID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id"};
+        throw std::runtime_error{"Invalid message id for MessageFloat"};
 }
 
 string MessageFloat::ToString() {
@@ -123,7 +123,7 @@ void MessageString::SetID(MESSAGE_ID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id"};
+        throw std::runtime_error{"Invalid message id for MessageString"};
 }
 
 string MessageString::ToString() {
@@ -158,7 +158,7 @@ void MessageBool::SetID(MESSAGE_ID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id"};
+        throw std::runtime_error{"Invalid message id for MessageBool"};
 }
 
 string MessageBool::ToString() {

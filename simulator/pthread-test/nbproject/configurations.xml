@@ -7,6 +7,7 @@
       <itemPath>../raspberry/lib/inc/comgui.h</itemPath>
       <itemPath>../raspberry/lib/inc/comstm32.h</itemPath>
       <itemPath>../raspberry/lib/inc/constantes.h</itemPath>
+      <itemPath>../raspberry/lib/inc/control.h</itemPath>
       <itemPath>../raspberry/lib/inc/messages.h</itemPath>
       <itemPath>../raspberry/lib/inc/parameters.h</itemPath>
       <itemPath>../raspberry/lib/inc/trace.h</itemPath>
@@ -20,6 +21,7 @@
                    projectFiles="true">
       <itemPath>../raspberry/lib/src/comgui.cpp</itemPath>
       <itemPath>../raspberry/lib/src/comstm32.cpp</itemPath>
+      <itemPath>../raspberry/lib/src/control.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>../raspberry/lib/src/messages.cpp</itemPath>
       <itemPath>../raspberry/lib/src/parameters.cpp</itemPath>
@@ -68,6 +70,8 @@
       </item>
       <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../raspberry/lib/inc/control.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
@@ -75,6 +79,8 @@
       <item path="../raspberry/lib/inc/trace.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/src/control.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -112,6 +118,8 @@
       </item>
       <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../raspberry/lib/inc/control.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
@@ -121,6 +129,8 @@
       <item path="../raspberry/lib/src/comgui.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../raspberry/lib/src/control.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -162,6 +172,8 @@
       </item>
       <item path="../raspberry/lib/inc/constantes.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../raspberry/lib/inc/control.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../raspberry/lib/inc/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../raspberry/lib/inc/parameters.h" ex="false" tool="3" flavor2="0">
@@ -171,6 +183,8 @@
       <item path="../raspberry/lib/src/comgui.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../raspberry/lib/src/comstm32.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../raspberry/lib/src/control.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../raspberry/lib/src/messages.cpp" ex="false" tool="1" flavor2="8">
       </item>

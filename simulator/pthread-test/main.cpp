@@ -21,6 +21,7 @@
 
 #include <time.h>
 #include "comgui.h"
+#include "control.h"
 
 using namespace std;
 
@@ -46,33 +47,33 @@ void DecodeMessage(Message *msg) {
 
         switch (id) {
             case MESSAGE_ANGLE_POSITION:
-                parameters.SetAngle(((MessageFloat*)msg)->GetValue());
+                parameters.SetAngle(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_ANGULAR_SPEED:
-                parameters.SetAngularSpeed(((MessageFloat*)msg)->GetValue());
+                parameters.SetAngularSpeed(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_BATTERY:
-                parameters.SetBattery(((MessageFloat*)msg)->GetValue());
+                parameters.SetBattery(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_BETA:
-                parameters.SetBeta(((MessageFloat*)msg)->GetValue());
+                parameters.SetBeta(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_LINEAR_SPEED:
-                parameters.SetLinearSpeed(((MessageFloat*)msg)->GetValue());
+                parameters.SetLinearSpeed(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_TORQUE:
-                parameters.SetTorque(((MessageFloat*)msg)->GetValue());
+                parameters.SetTorque(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_EMERGENCY_STOP:
-                parameters.SetEmergencyStop(((MessageBool*)msg)->GetState());
+                parameters.SetEmergencyStop(((MessageBool*) msg)->GetState());
                 break;
             case MESSAGE_USER_PRESENCE:
-                parameters.SetUserPresence(((MessageBool*)msg)->GetState());
+                parameters.SetUserPresence(((MessageBool*) msg)->GetState());
                 break;
             case MESSAGE_EMPTY:
             case MESSAGE_LOG:
             default:
-                
+
                 break;
         }
     }
@@ -80,7 +81,7 @@ void DecodeMessage(Message *msg) {
 
 void ThreadCom(void) {
     Message *msg;
-        
+
     while (1) {
         //Read incoming command from stm32
         msg = com->Read();
@@ -117,10 +118,12 @@ void ThreadTimer(void) {
 int main(int argc, char** argv) {
     Message *a;
     MessageFloat *f;
-    
+
     int status;
-    int counter=0;
-    
+    int counter = 0;
+
+    float torque;
+
     cout << "Open STM32 com (";
     status = com->Open();
     cout << status;
@@ -144,7 +147,27 @@ int main(int argc, char** argv) {
                 if (sysTick == true) {
                     sysTick = false;
 
-                    parameters.SetTorque(2.0);
+                    if ((parameters.UserPresence() == false) || (parameters.Battery() < 10.0)) {
+                        
+                        if (parameters.EmergencyStop()==false) cout << "Raise emergency signal" << endl;
+                        parameters.SetEmergencyStop(true);
+                        
+                        a = new MessageBool(MESSAGE_EMERGENCY_STOP, parameters.EmergencyStop());
+                        com->Write(a);
+                        
+                        torque = 0.0;
+                    }
+                    else
+                    {
+                        if (parameters.EmergencyStop()==true) cout << "Drop emergency signal" << endl;
+                        
+                        parameters.SetEmergencyStop(false);
+                        torque = Control::ComputeTorque(parameters.Angle(), parameters.AngularSpeed());
+                    }
+                    
+                    parameters.SetTorque(torque);
+                    f = new MessageFloat(MESSAGE_TORQUE, parameters.Torque());
+                    com->Write(f);
                     
                     comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, parameters.Angle()));
                     comGui->Write(new MessageFloat(MESSAGE_BATTERY, parameters.Battery()));
@@ -152,35 +175,8 @@ int main(int argc, char** argv) {
                     comGui->Write(new MessageBool(MESSAGE_USER_PRESENCE, parameters.UserPresence()));
                     comGui->Write(new MessageFloat(MESSAGE_TORQUE, parameters.Torque()));
                     comGui->Write(new MessageFloat(MESSAGE_ANGULAR_SPEED, parameters.AngularSpeed()));
-                    
-//                    switch (counter) {
-//                        case 0:
-//                            comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, parameters.Angle()));
-//                            break;
-//                        case 1:
-//                            comGui->Write(new MessageFloat(MESSAGE_BATTERY, parameters.Battery()));
-//                            break;
-//                        case 2:
-//                            comGui->Write(new MessageFloat(MESSAGE_BETA, parameters.Beta()));
-//                            break;
-//                        case 3:
-//                            comGui->Write(new MessageBool(MESSAGE_USER_PRESENCE, parameters.UserPresence()));
-//                            break;
-//                        case 4:
-//                            comGui->Write(new MessageFloat(MESSAGE_TORQUE, parameters.Torque()));
-//                            break;
-//                        case 5:
-//                            comGui->Write(new MessageFloat(MESSAGE_ANGULAR_SPEED, parameters.AngularSpeed()));
-//                            break;
-//                        default:    
-//                            break;
-//                    }
-//                    
-//                    counter++;
-//                    if (counter >5) counter=0;
-                    
-                    f = new MessageFloat(MESSAGE_TORQUE, 2.0);
-                    com->Write(f);
+                    comGui->Write(new MessageFloat(MESSAGE_LINEAR_SPEED, parameters.LinearSpeed()));
+                    comGui->Write(new MessageBool(MESSAGE_EMERGENCY_STOP, parameters.EmergencyStop()));
                 }
             }
         }

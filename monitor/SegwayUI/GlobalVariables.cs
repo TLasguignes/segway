@@ -37,7 +37,7 @@ namespace SegwayUI
             EmergencyStopID
         };
 
-        private const int TIMEOUT = 1000;
+        private const int TIMEOUT = 2000;
 
         public delegate void InvalidEvent(VarID id);
         public InvalidEvent InvalidEventHandler = null;

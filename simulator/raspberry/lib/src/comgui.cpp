@@ -103,7 +103,7 @@ void ComGui::Write(Message* msg) {
     /* Convert message to string to send to GUI */
     str = MessageToString(msg);
     
-    cout << "Message sent to GUI: " << str->c_str() << endl;
+    //cout << "Message sent to GUI: " << str->c_str() << endl;
     write(clientID, str->c_str(), str->length());
     
     delete(str);
@@ -174,65 +174,3 @@ string *ComGui::MessageToString(Message *msg)
     
     return str;
 }
-
-/**
-        Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
-        une information de type float.
-        @params char * str : string qui doit être envoyé à l'affichage
-        @params char label : label de la donnée (voir format d'envoi)
-        @params float data : donnée
-        @params int indice : indice de tableau
- */
-//
-//void add_info_float(unsigned char * str, char label, float data, int * indice) {
-//    int ind = *indice;
-//    float tampon = 100000.05f + data;
-//    unsigned char* f = (unsigned char*) &tampon;
-//
-//    str[ind++] = '<';
-//    str[ind++] = label;
-//    str[ind++] = f[0];
-//    str[ind++] = f[1];
-//    str[ind++] = f[2];
-//    str[ind++] = f[3];
-//    str[ind++] = '\n';
-//
-//    *indice = ind;
-//}
-
-/**
-        Fonction utilisée par le thread affichage afin d'ajouter à la trame d'envoi
-        une information de type int.
-        @params char * str : string qui doit être envoyé à l'affichage
-        @params char label : label de la donnée (voir format d'envoi)
-        @params int data : donnée
-        @params int indice : indice de tableau
- */
-//
-//void add_info_int(unsigned char * str, char label, int data, int * indice) {
-//    int ind = *indice;
-//    float tampon = 100000.05f + data;
-//    unsigned char* f = (unsigned char*) &tampon;
-//
-//    str[ind++] = '<';
-//    str[ind++] = label;
-//    str[ind++] = f[0];
-//    str[ind++] = f[1];
-//    str[ind++] = f[2];
-//    str[ind++] = f[3];
-//    str[ind++] = '\n';
-//
-//    *indice = ind;
-//}
-
-/**
-        Envoie une trame vers l'affichage
-        @params int sock : numéro de socket
-        @params char * msg : tableau de caractères à envoyer, maximum 256 caractères
- */
-//void send_trame(int sock, unsigned char * msg, int* indice) {
-//    int j = *indice;
-//    /* write a message to the server */
-//    write(sock, msg, j);
-//    *indice = 0;
-//}

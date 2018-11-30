@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/db41d586/comgui.o \
 	${OBJECTDIR}/_ext/db41d586/comstm32.o \
+	${OBJECTDIR}/_ext/db41d586/control.o \
 	${OBJECTDIR}/_ext/db41d586/messages.o \
 	${OBJECTDIR}/_ext/db41d586/parameters.o \
 	${OBJECTDIR}/_ext/db41d586/trace.o \
@@ -76,6 +77,11 @@ ${OBJECTDIR}/_ext/db41d586/comstm32.o: ../raspberry/lib/src/comstm32.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/comstm32.o ../raspberry/lib/src/comstm32.cpp
+
+${OBJECTDIR}/_ext/db41d586/control.o: ../raspberry/lib/src/control.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/db41d586/control.o ../raspberry/lib/src/control.cpp
 
 ${OBJECTDIR}/_ext/db41d586/messages.o: ../raspberry/lib/src/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/db41d586

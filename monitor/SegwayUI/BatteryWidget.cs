@@ -114,7 +114,7 @@ namespace SegwayUI
                 }
                 else
                 {
-                    labelWidget.Text = Convert.ToString(this.value) + "%";
+                    labelWidget.Text = Convert.ToString((int)this.value) + "%";
 
                     if (val > 87) imageWidget.Pixbuf = icons[BATTERY_100];
                     else if (val > 62) imageWidget.Pixbuf = icons[BATTERY_75];

@@ -308,7 +308,7 @@ namespace SegwayUI
             double val = currentValue;
             int width, height;
 
-            if (Sensitive == false)
+            if ((Sensitive == false) || (invalid == true))
             {
                 localFillColor = sensitiveFillColor;
                 localBorderColor= sensitiveBorderColor;
@@ -400,17 +400,6 @@ namespace SegwayUI
             cr.MoveTo(-te.Width / 2,
                       -radius - te.Height - 5);
             cr.ShowText(text);
-
-            if (this.invalid == true)
-            {
-                cr.Translate(-width / 2, -((height / 2) + (height / 3)));
-
-                cr.MoveTo(new PointD(20, 20));
-                cr.LineTo(new PointD(width - 20, height - 20));
-                cr.LineWidth = 5;
-                cr.SetSourceColor(localStrikeoutColor);
-                cr.Stroke();
-            }
 
             ((IDisposable)cr.GetTarget()).Dispose();
             ((IDisposable)cr).Dispose();
