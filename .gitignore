@@ -64,3 +64,4 @@ GUI
 
 /simulator/pthread-test/build/
 /simulator/pthread-test/dist/
+/simulator/raspberry/build/
