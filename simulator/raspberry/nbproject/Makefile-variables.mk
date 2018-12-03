@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/raspberry
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
 CND_PACKAGE_NAME_Release=raspberry.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/raspberry.tar
+# Debug_Raspberry configuration
+CND_PLATFORM_Debug_Raspberry=GNU-Linux
+CND_ARTIFACT_DIR_Debug_Raspberry=dist/Debug_Raspberry/GNU-Linux
+CND_ARTIFACT_NAME_Debug_Raspberry=segway_supervisor
+CND_ARTIFACT_PATH_Debug_Raspberry=dist/Debug_Raspberry/GNU-Linux/segway_supervisor
+CND_PACKAGE_DIR_Debug_Raspberry=dist/Debug_Raspberry/GNU-Linux/package
+CND_PACKAGE_NAME_Debug_Raspberry=raspberry.tar
+CND_PACKAGE_PATH_Debug_Raspberry=dist/Debug_Raspberry/GNU-Linux/package/raspberry.tar
 #
 # include compiler specific variables
 #

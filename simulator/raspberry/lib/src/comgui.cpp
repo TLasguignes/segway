@@ -31,6 +31,8 @@
 #include <netinet/in.h>
 
 #include <algorithm>
+#include <stdexcept>
+#include <string>
 
 const string LABEL_GUI_ANGULAR_POSITION = "AngularPosition";
 const string LABEL_GUI_ANGULAR_SPEED = "AngularSpeed";
@@ -51,8 +53,7 @@ int ComGui::Open(int port) {
 
     socketFD = socket(AF_INET, SOCK_STREAM, 0);
     if (socketFD < 0) {
-        perror("Can not create socket");
-        exit(-1);
+        throw std::runtime_error{"ComGui::Open : Can not create socket"};
     }
 
     server.sin_addr.s_addr = INADDR_ANY;
@@ -60,8 +61,7 @@ int ComGui::Open(int port) {
     server.sin_port = htons(port);
 
     if (bind(socketFD, (struct sockaddr *) &server, sizeof (server)) < 0) {
-        perror("Can not bind socket");
-        exit(-1);
+        throw std::runtime_error{"ComGui::Open : Can not bind socket on port " + std::to_string(port)};
     }
 
     listen(socketFD, 1);
@@ -81,10 +81,8 @@ int ComGui::AcceptClient() {
 
     clientID = accept(socketFD, (struct sockaddr *) &client, (socklen_t*) & c);
 
-    if (clientID < 0) {
-        perror("Accept failed in AcceptClient");
-        exit(-1);
-    }
+    if (clientID < 0) 
+        throw std::runtime_error{"ComGui::AcceptClient : Accept failed"};
 
     return clientID;
 }

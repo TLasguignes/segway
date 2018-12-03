@@ -35,15 +35,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/fonctions.o \
-	${OBJECTDIR}/global.o \
 	${OBJECTDIR}/lib/src/comgui.o \
 	${OBJECTDIR}/lib/src/comstm32.o \
 	${OBJECTDIR}/lib/src/control.o \
 	${OBJECTDIR}/lib/src/messages.o \
 	${OBJECTDIR}/lib/src/parameters.o \
 	${OBJECTDIR}/lib/src/trace.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/tasks.o
 
 
 # C Compiler Flags
@@ -69,16 +68,6 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/raspberry: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/raspberry ${OBJECTFILES} ${LDLIBSOPTIONS}
-
-${OBJECTDIR}/fonctions.o: fonctions.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/fonctions.o fonctions.cpp
-
-${OBJECTDIR}/global.o: global.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/global.o global.cpp
 
 ${OBJECTDIR}/lib/src/comgui.o: lib/src/comgui.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
@@ -114,6 +103,11 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/tasks.o: tasks.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
 
 # Subprojects
 .build-subprojects:

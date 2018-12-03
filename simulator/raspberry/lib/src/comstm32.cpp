@@ -13,6 +13,9 @@
 #include <fcntl.h>
 #include <termios.h>  
 
+#include <string>
+#include <stdexcept>
+
 /**
         Initialize the serial port in order to send and receive messages through it
         @returns: the file descriptor, or -1 if there was an error. 
@@ -44,7 +47,7 @@ int ComStm32::Open() {
     fd = open(USART_FILENAME, O_RDWR | O_NOCTTY /*| O_NDELAY*/); //Open in non blocking read/write mode
     if (fd == -1) {
         //ERROR - CAN'T OPEN SERIAL PORT
-        printf("Error - Unable to open UART.  Ensure it is not in use by another application\n");
+        throw std::runtime_error{"Error - Unable to open UART "+ string(USART_FILENAME)+".  Ensure it is not in use by another application"};
         exit(EXIT_FAILURE);
     }
 
@@ -93,7 +96,7 @@ Message* ComStm32::Read() {
 
         if (rxLength <= -1) {
             this->lostCom = true;
-            printf("Lost Com");
+            printf("Warning: communication lost in ComStm32::Read\n");
             msg = new Message();
 
             return msg;
@@ -281,7 +284,7 @@ int ComStm32::Write(Message* msg) {
     if (this->fd != -1) {
         int count = write(this->fd, &buffer[0], 7); //Filestream, bytes to write, number of bytes to write
         if (count < 0) {
-            printf("UART TX error\n");
+            printf("Warning: UART TX error in ComStm32::Write\n");
         } else {
             ret_val = 1;
         }

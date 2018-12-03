@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug_Raspberry
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -58,7 +58,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/usr/xenomai/lib -Wl,--no-as-needed -lalchemy -lcopperplate /usr/xenomai/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/xenomai/lib/dynlist.ld -lmercury -lpthread
+LDLIBSOPTIONS=-L/usr/xenomai/lib -lalchemy -lcopperplate /usr/xenomai/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/xenomai/lib/dynlist.ld -lcobalt -lpthread
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -71,37 +71,37 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/segway_supervisor: ${OBJECTFILES}
 ${OBJECTDIR}/lib/src/comgui.o: lib/src/comgui.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/comgui.o lib/src/comgui.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/comgui.o lib/src/comgui.cpp
 
 ${OBJECTDIR}/lib/src/comstm32.o: lib/src/comstm32.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/comstm32.o lib/src/comstm32.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/comstm32.o lib/src/comstm32.cpp
 
 ${OBJECTDIR}/lib/src/control.o: lib/src/control.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/control.o lib/src/control.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/control.o lib/src/control.cpp
 
 ${OBJECTDIR}/lib/src/messages.o: lib/src/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/messages.o lib/src/messages.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/messages.o lib/src/messages.cpp
 
 ${OBJECTDIR}/lib/src/parameters.o: lib/src/parameters.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/parameters.o lib/src/parameters.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/src/parameters.o lib/src/parameters.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/tasks.o: tasks.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Ilib/inc -I/usr/xenomai/include/mercury -I/usr/xenomai/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib/inc -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
 
 # Subprojects
 .build-subprojects:
