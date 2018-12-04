@@ -37,37 +37,7 @@
 #define PRIORITY_TH_ENVOYER 90
 #define PRIORITY_TH_ARRET_URGENCE 95
 
-#define SERVER_PORT 2346
-
-/* MUTEX ***********************************/
-RT_MUTEX Tasks::mutexAngleBeta;
-RT_MUTEX Tasks::mutexComState;
-RT_MUTEX Tasks::mutexAnglePosition;
-RT_MUTEX Tasks::mutexTorque;
-RT_MUTEX Tasks::mutexBattery;
-RT_MUTEX Tasks::mutexUserPresence;
-RT_MUTEX Tasks::mutexReceptionState;
-RT_MUTEX Tasks::mutexEmergencyStop;
-RT_MUTEX Tasks::mutexWatchdog;
-
-/* SEMAPHORES ******************************/
-RT_SEM Tasks::semEmergencyStop;
-RT_SEM Tasks::semSend;
-
-/* Files de messages ************************/
-RT_QUEUE Tasks::queueFromStm32; // File de messages destinés au STM32
-RT_QUEUE Tasks::queue_Msg2GUI; // File de messages destinés au GUI
-
-/* Tasks handler **********************************/
-RT_TASK Tasks::taskStm32;
-RT_TASK Tasks::taskControl;
-RT_TASK Tasks::taskGui;
-RT_TASK Tasks::taskSend;
-
-/* Others objects (communication, parameters storage) */
-ComGui* Tasks::comGui;
-ComStm32* Tasks::comStm32;
-Parameters Tasks::parameters;
+#define SERVER_PORT 2345
 
 using namespace std;
 
@@ -76,120 +46,41 @@ void Tasks::Init() {
     int status;
 
     /**************************************************************************************/
-    /* 	Creation des mutex                                                                */
+    /* 	Mutex creation                                                                    */
     /**************************************************************************************/
-    if (err = rt_mutex_create(&mutexComState, "mutexComState")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexComState " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexAngleBeta, "mutexAngleBeta")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
+    if (err = rt_mutex_create(&mutexAngleBeta, "mutexAngleBeta"))
         throw std::runtime_error{"Error creating mutexAngleBeta " + string(strerror(-err))};
-    }
 
-    if (err = rt_mutex_create(&mutexAnglePosition, "mutexAnglePosition")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexAnglePosition " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexTorque, "mutexTorque")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexTorque " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexBattery, "mutexBattery")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexBattery " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexReceptionState, "mutexReceptionState")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexReceptionState " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexWatchdog, "mutexWatchdog")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexWatchdog " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexUserPresence, "mutexUserPresence")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexUserPresence " + string(strerror(-err))};
-    }
-
-    if (err = rt_mutex_create(&mutexEmergencyStop, "mutexEmergencyStop")) {
-        //rt_printf("Error mutex create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexEmergencyStop " + string(strerror(-err))};
-    }
-
-    printf("All mutex created successfully\n");
-
+    cout << "Mutexes created successfully" << endl;
 
     /**************************************************************************************/
-    /* 	Creation des semaphores 							  */
+    /* 	Semaphors creation       							  */
     /**************************************************************************************/
+    if (err = rt_sem_create(&semSendGui, "semSendGui", 0, TM_INFINITE))
+        throw std::runtime_error{"Error creating semSendGui " + string(strerror(-err))};
 
-    if (err = rt_sem_create(&semEmergencyStop, "var_sem_arret", 0, TM_INFINITE)) {
-        //rt_printf("Error semaphore create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexEmergencyStop " + string(strerror(-err))};
-    }
-
-    if (err = rt_sem_create(&semSend, "var_sem_envoyer", 0, TM_INFINITE)) {
-        //rt_printf("Error semaphore create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating mutexEmergencyStop " + string(strerror(-err))};
-    }
-
-    printf("Fin init semaphores\n");
+    cout << "Semaphors created successfully" << endl;
 
     /**************************************************************************************/
-    /* Creation des taches                                                                */
+    /* Tasks creation                                                                     */
     /**************************************************************************************/
-
-    if (err = rt_task_create(&taskStm32, "taskStm32", 0, PRIORITY_TH_COMMUNICATION, 0)) {
-        //rt_printf("Error task create: %s\n", string(strerror(-err)));
-
+    if (err = rt_task_create(&taskStm32Handler, "taskStm32", 0, PRIORITY_TH_COMMUNICATION, 0)) 
         throw std::runtime_error{"Error creating taskStm32 " + string(strerror(-err))};
-    }
 
-    if (err = rt_task_create(&taskControl, "taskControl", 0, PRIORITY_TH_ASSERVISSEMENT, 0)) {
-        //rt_printf("Error task create: %s\n", string(strerror(-err)));
+    if (err = rt_task_create(&taskSystemControlHandler, "taskSystemControlHandler", 0, PRIORITY_TH_ASSERVISSEMENT, 0)) 
+        throw std::runtime_error{"Error creating taskSystemControlHandler " + string(strerror(-err))};
 
-        throw std::runtime_error{"Error creating taskControl " + string(strerror(-err))};
-    }
-
-    if (err = rt_task_create(&taskGui, "taskGui", 0, PRIORITY_TH_AFFICHAGE, 0)) {
-        //rt_printf("Error task create: %s\n", string(strerror(-err)));
-
+    if (err = rt_task_create(&taskGuiHandler, "taskGui", 0, PRIORITY_TH_AFFICHAGE, 0)) 
         throw std::runtime_error{"Error creating taskGui " + string(strerror(-err))};
-    }
 
-    if (err = rt_task_create(&taskSend, "taskSend", 0, PRIORITY_TH_ENVOYER, 0)) {
-        //rt_printf("Error task create: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error creating taskSend " + string(strerror(-err))};
-    }
-
-    printf("Fin init tache\n");
+    cout << "Tasks created successfully" << endl;
 
     /**************************************************************************************/
-    /* Creation la file de message                                                        */
+    /* Message queues creation                                                            */
     /**************************************************************************************/
-
-    int err1 = 0;
-    err1 = rt_queue_create(&queueFromStm32, "queueFromStm32", sizeof (Message*)*50, Q_UNLIMITED, Q_FIFO);
-    if (err1 < 0) {
+    err = rt_queue_create(&queueFromStm32, "queueFromStm32", sizeof (Message*)*50, Q_UNLIMITED, Q_FIFO);
+    
+    if (err < 0) {
         switch (err) {
             case (-EINVAL):
                 throw std::runtime_error{"rt_queue_create error: invalid mode or poolsize is 0"};
@@ -204,51 +95,41 @@ void Tasks::Init() {
                 throw std::runtime_error{"rt_queue_create error: called by asynchronous context"};
                 break;
         }
-    } else printf("Queue créée avec succès\n\n");
+    } else 
+        cout << "Queues created successfully" << endl << endl;
 
-    /* Object creation */
-    Tasks::comGui = new ComGui();
-    Tasks::comStm32 = new ComStm32();
-
-    /* Ouverture du port com avec le STM32 */
+    /* Open com port with STM32 */
     cout << "Open STM32 com (";
-    status = Tasks::comStm32->Open();
+    status = this->comStm32->Open();
     cout << status;
     cout << ")" << endl;
 
     if (status >= 0) {
-        // open Server
+        // Open server
 
-        status = comGui->Open(SERVER_PORT);
+        status = this->comGui->Open(SERVER_PORT);
         cout << "Open server on port " << SERVER_PORT << " (" << status << ")" << endl;
 
         if (status < 0) throw std::runtime_error {
             "Unable to start server on port " +std::to_string(SERVER_PORT)
         };
-    } else throw std::runtime_error {
-        "Unable to open serial port /dev/ttyS0 "
-    };
+    } else 
+        throw std::runtime_error {"Unable to open serial port /dev/ttyS0 "};
 }
 
 void Tasks::StartTasks() {
     int err;
 
-    if (err = rt_task_start(&taskStm32, &Tasks::ComSTM32Task, NULL)) {
-        //rt_printf("Error task start: %s\n", string(strerror(-err)));
+    if (err = rt_task_start(&taskStm32Handler, (void (*)(void*))&Tasks::TaskStm32Reception, this))
+        throw std::runtime_error{"Error when starting taskStm32 : " + string(strerror(-err))};
 
-        throw std::runtime_error{"Error taskStm32 start " + string(strerror(-err))};
-    }
-
-    if (err = rt_task_start(&taskGui, &Tasks::GUITask, NULL)) {
-        //rt_printf("Error task start: %s\n", string(strerror(-err)));
-
-        throw std::runtime_error{"Error taskStm32 start " + string(strerror(-err))};
-    }
+    if (err = rt_task_start(&taskGuiHandler,(void (*)(void*))&Tasks::TaskGui, this))
+        throw std::runtime_error{"Error when starting taskStm32 : " + string(strerror(-err))};
 }
 
 void Tasks::DeleteTasks() {
-    rt_task_delete(&taskGui);
-    rt_task_delete(&taskStm32);
+    rt_task_delete(&this->taskGuiHandler);
+    rt_task_delete(&this->taskStm32Handler);
 }
 
 void Tasks::UpdateParameters(Message *msg) {
@@ -260,33 +141,33 @@ void Tasks::UpdateParameters(Message *msg) {
 
         switch (id) {
             case MESSAGE_ANGLE_POSITION:
-                Tasks::parameters.SetAngle(((MessageFloat*) msg)->GetValue());
+                parameters->SetAngle(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_ANGULAR_SPEED:
-                Tasks::parameters.SetAngularSpeed(((MessageFloat*) msg)->GetValue());
+                parameters->SetAngularSpeed(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_BATTERY:
-                Tasks::parameters.SetBattery(((MessageFloat*) msg)->GetValue());
+                parameters->SetBattery(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_BETA:
-                Tasks::parameters.SetBeta(((MessageFloat*) msg)->GetValue());
+                parameters->SetBeta(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_LINEAR_SPEED:
-                Tasks::parameters.SetLinearSpeed(((MessageFloat*) msg)->GetValue());
+                parameters->SetLinearSpeed(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_TORQUE:
-                Tasks::parameters.SetTorque(((MessageFloat*) msg)->GetValue());
+                parameters->SetTorque(((MessageFloat*) msg)->GetValue());
                 break;
             case MESSAGE_EMERGENCY_STOP:
-                Tasks::parameters.SetEmergencyStop(((MessageBool*) msg)->GetState());
+                parameters->SetEmergencyStop(((MessageBool*) msg)->GetState());
                 break;
             case MESSAGE_USER_PRESENCE:
-                Tasks::parameters.SetUserPresence(((MessageBool*) msg)->GetState());
+                parameters->SetUserPresence(((MessageBool*) msg)->GetState());
                 break;
             case MESSAGE_EMPTY:
             case MESSAGE_LOG:
             default:
-
+                /* nothing to do, yet !*/
                 break;
         }
     }
@@ -297,7 +178,7 @@ void Tasks::UpdateParameters(Message *msg) {
  *  des variables partagées.
  * fonctions : init_serial, read_from_serial, printf_trame
  * variables : etat_com, etat_reception */
-void Tasks::ComSTM32Task(void *arg) {
+void Tasks::TaskStm32Reception(void *arg) {
     //    int uart0_filestream = -1;
     //    int i;
     //    int com = 0;
@@ -331,8 +212,8 @@ void Tasks::ComSTM32Task(void *arg) {
 
     while (1) {
         //Read incoming command from stm32
-        msg = Tasks::comStm32->Read();
-        Tasks::UpdateParameters(msg);
+        msg = this->comStm32->Read();
+        this->UpdateParameters(msg);
     }
 }
 
@@ -341,7 +222,7 @@ void Tasks::ComSTM32Task(void *arg) {
  *  cette fonction n'a pas à être modifiée, à part modification du GUI et ajout d'informations à envoyer 
  * fonctions : add_info_float, send_trame
  * variables : etat_angle, vitesse_lin, consigne_couple, batterie, presence_user, etat_com, arret */
-void Tasks::GUITask(void *arg) {
+void Tasks::TaskGui(void *arg) {
 
     //    unsigned char *str;
     //    int indice = 0;
@@ -442,32 +323,32 @@ void Tasks::GUITask(void *arg) {
     while (1) {
         rt_task_wait_period(NULL);
 
-        if ((Tasks::parameters.UserPresence() == false) || (Tasks::parameters.Battery() < 10.0)) {
-            if (Tasks::parameters.EmergencyStop() == false) cout << "Raise emergency signal" << endl;
-            Tasks::parameters.SetEmergencyStop(true);
+        if ((this->parameters->UserPresence() == false) || (this->parameters->Battery() < 10.0)) {
+            if (this->parameters->EmergencyStop() == false) cout << "Raise emergency signal" << endl;
+            this->parameters->SetEmergencyStop(true);
 
-            msg = new MessageBool(MESSAGE_EMERGENCY_STOP, Tasks::parameters.EmergencyStop());
-            Tasks::comStm32->Write(msg);
+            msg = new MessageBool(MESSAGE_EMERGENCY_STOP, this->parameters->EmergencyStop());
+            this->comStm32->Write(msg);
 
             torque = 0.0;
         } else {
-            if (Tasks::parameters.EmergencyStop() == true) cout << "Drop emergency signal" << endl;
+            if (this->parameters->EmergencyStop() == true) cout << "Drop emergency signal" << endl;
 
-            Tasks::parameters.SetEmergencyStop(false);
-            torque = Control::ComputeTorque(parameters.Angle(), Tasks::parameters.AngularSpeed());
+            this->parameters->SetEmergencyStop(false);
+            torque = Control::ComputeTorque(this->parameters->Angle(), this->parameters->AngularSpeed());
         }
 
-        Tasks::parameters.SetTorque(torque);
-        msg = new MessageFloat(MESSAGE_TORQUE, Tasks::parameters.Torque());
-        Tasks::comStm32->Write(msg);
+        this->parameters->SetTorque(torque);
+        msg = new MessageFloat(MESSAGE_TORQUE, this->parameters->Torque());
+        this->comStm32->Write(msg);
 
-        comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, Tasks::parameters.Angle()));
-        comGui->Write(new MessageFloat(MESSAGE_BATTERY, Tasks::parameters.Battery()));
-        comGui->Write(new MessageFloat(MESSAGE_BETA, Tasks::parameters.Beta()));
-        comGui->Write(new MessageBool(MESSAGE_USER_PRESENCE, Tasks::parameters.UserPresence()));
-        comGui->Write(new MessageFloat(MESSAGE_TORQUE, Tasks::parameters.Torque()));
-        comGui->Write(new MessageFloat(MESSAGE_ANGULAR_SPEED, Tasks::parameters.AngularSpeed()));
-        comGui->Write(new MessageFloat(MESSAGE_LINEAR_SPEED, Tasks::parameters.LinearSpeed()));
-        comGui->Write(new MessageBool(MESSAGE_EMERGENCY_STOP, Tasks::parameters.EmergencyStop()));
+        this->comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, this->parameters->Angle()));
+        this->comGui->Write(new MessageFloat(MESSAGE_BATTERY, this->parameters->Battery()));
+        this->comGui->Write(new MessageFloat(MESSAGE_BETA, this->parameters->Beta()));
+        this->comGui->Write(new MessageBool(MESSAGE_USER_PRESENCE, this->parameters->UserPresence()));
+        this->comGui->Write(new MessageFloat(MESSAGE_TORQUE, this->parameters->Torque()));
+        this->comGui->Write(new MessageFloat(MESSAGE_ANGULAR_SPEED, this->parameters->AngularSpeed()));
+        this->comGui->Write(new MessageFloat(MESSAGE_LINEAR_SPEED, this->parameters->LinearSpeed()));
+        this->comGui->Write(new MessageBool(MESSAGE_EMERGENCY_STOP, this->parameters->EmergencyStop()));
     }
 }

@@ -25,6 +25,7 @@
 #include <iostream>
 #include <unistd.h>
 
+//#include "tasks.h"
 #include "tasks.h"
 
 /**
@@ -32,26 +33,31 @@
  */
 int main(void) {
     int status;
-
+    Tasks *tasks;
+    
     /* disable memory swap */
     mlockall(MCL_CURRENT | MCL_FUTURE);
     //init_recording();		// Initialisation de l'enregistrement des évènements par le log
 
     cout << "Segway Supervisor" << endl << endl;
-
-    Tasks::Init(); // Création des tâches, mutex, sémaphores, files de messages, ouverture des ports
-
+    tasks = new Tasks();
+    tasks->Init(); // Création des tâches, mutex, sémaphores, files de messages, ouverture des ports
+    //Tasks::Init();
+    
     // Wait client to connect
     cout << "Waiting for client (GUI) to connect ..." << endl;
-    status = Tasks::comGui->AcceptClient();
+    status = tasks->WaitForClient();
+    //status = Tasks::comGui->AcceptClient();
 
     if (status >= 0) {
         cout << "Client connected (" << status << "), rock'n'roll baby !" << endl << endl;
 
-        Tasks::StartTasks(); // Démarre toutes les tâches
+        tasks->StartTasks(); // Démarre toutes les tâches
+        //Tasks::StartTasks();
 
         pause();
-        Tasks::DeleteTasks();
+        tasks->DeleteTasks();
+        //Tasks::DeleteTasks();
     }
 
     //stop_recording();

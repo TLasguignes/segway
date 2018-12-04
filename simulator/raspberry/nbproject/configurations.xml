@@ -15,8 +15,8 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/.gitignore</itemPath>
-      <itemPath>/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/README.md</itemPath>
+      <itemPath>.gitignore</itemPath>
+      <itemPath>README.md</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -79,15 +79,9 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/.gitignore"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path=".gitignore" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/README.md"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -138,15 +132,9 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/.gitignore"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path=".gitignore" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/README.md"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -194,6 +182,7 @@
             <pElem>/usr/xenomai/include</pElem>
             <pElem>/usr/xenomai/include/alchemy</pElem>
           </incDir>
+          <commandLine>-Wno-pmf-conversions</commandLine>
           <preprocessorList>
             <Elem>_GNU_SOURCE</Elem>
             <Elem>_REENTRANT</Elem>
@@ -216,15 +205,9 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/.gitignore"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path=".gitignore" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="/home/dimercur/Documents/Travail/git/segway/simulator/raspberry/README.md"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/inc/comgui.h" ex="false" tool="3" flavor2="0">
       </item>

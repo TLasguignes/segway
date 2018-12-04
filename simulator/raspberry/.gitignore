@@ -1,5 +1,6 @@
 build/
 dist/
+docs/
 
 .dep.inc
 .o

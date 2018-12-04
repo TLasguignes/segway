@@ -42,52 +42,50 @@ using namespace std;
  */
 class Tasks {
 public:
-    static void Init();
-    static void StartTasks();
-    static void DeleteTasks();
-    static void UpdateParameters(Message *msg);
-    
-    /* TASKS ***********************************/
-    static void ComSTM32Task(void * arg);
-    static void GUITask(void * arg);
-
-    /* MUTEX ***********************************/
-    static RT_MUTEX mutexAngleBeta;
-    static RT_MUTEX mutexComState;
-    static RT_MUTEX mutexAnglePosition;
-    static RT_MUTEX mutexTorque;
-    static RT_MUTEX mutexBattery;
-    static RT_MUTEX mutexUserPresence;
-    static RT_MUTEX mutexReceptionState;
-    static RT_MUTEX mutexEmergencyStop;
-    static RT_MUTEX mutexWatchdog;
-
-    /* SEMAPHORES ******************************/
-    static RT_SEM semEmergencyStop;
-    static RT_SEM semSend;
-
-    /* MESSAGES QUEUES ************************/
-    static RT_QUEUE queueFromStm32; // File de messages destinés au STM32
-    static RT_QUEUE queue_Msg2GUI; // File de messages destinés au GUI
-    
-    /* TASKS HANDLERS **********************************/
-    static RT_TASK taskStm32;
-    static RT_TASK taskControl;
-    static RT_TASK taskGui;
-    static RT_TASK taskSend;
-
-    /* Others objects (communication, parameters storage) */
-    static ComGui* comGui;
-    static ComStm32* comStm32;
-    static Parameters parameters;
-    
-private:
     // static class: will not make use of constructor and destructor
     Tasks() {
+        comGui = new ComGui();
+        comStm32 = new ComStm32();
+        parameters = new Parameters();
     }
 
     virtual ~Tasks() {
+        delete(comGui);
+        delete(comStm32);
+        delete(parameters);
     }
+    
+    void Init();
+    void StartTasks();
+    void DeleteTasks();
+    void UpdateParameters(Message *msg);
+    int WaitForClient() {
+        return comGui->AcceptClient();
+    }
+    
+    /* TASKS ***********************************/
+    void TaskStm32Reception(void * arg);
+    void TaskGui(void * arg);
+    
+private:
+    /* MUTEX ***********************************/
+    RT_MUTEX mutexAngleBeta;
+
+    /* SEMAPHORES ******************************/
+    RT_SEM semSendGui;
+
+    /* MESSAGES QUEUES ************************/
+    RT_QUEUE queueFromStm32; // File de messages destinés au STM32
+    
+    /* TASKS HANDLERS **********************************/
+    RT_TASK taskStm32Handler;
+    RT_TASK taskSystemControlHandler;
+    RT_TASK taskGuiHandler;
+
+    /* Others objects (communication, parameters storage) */
+    ComGui* comGui;
+    ComStm32* comStm32;
+    Parameters* parameters;
 };
 
 #endif /* __TASKS_H__ */
