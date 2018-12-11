@@ -49,8 +49,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-Wno-pmf-conversions
+CXXFLAGS=-Wno-pmf-conversions
 
 # Fortran Compiler Flags
 FFLAGS=

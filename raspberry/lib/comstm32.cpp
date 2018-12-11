@@ -1,8 +1,18 @@
-/* 
- * File:   lib_serial.c
- * Author: INSA TOULOUSE
+/*
+ * Copyright (C) 2018 dimercur
  *
- * Created on 10-07 2017
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "comstm32.h"
@@ -16,22 +26,15 @@
 #include <string>
 #include <stdexcept>
 
-/**
-        Initialize the serial port in order to send and receive messages through it
-        @returns: the file descriptor, or -1 if there was an error. 
-        (Retreiving the file descriptor is not necessary as it is not an argument of any function of the library)
-
- */
-
-#define MESSAGE_SERIAL_LENGTH 37
-#define MESSAGE_TIMEOUT_NS 2000
-
 #ifdef __FOR_PC__
 #define USART_FILENAME "/dev/ttyUSB0"
 #else
 #define USART_FILENAME "/dev/ttyS0"
 #endif /* __FOR_PC__ */
 
+/*
+ * Constants to be used for communicating with STM32. Contains command tag
+ */
 enum LABEL_STM32 {
     LABEL_ANGLE_POSITION = 'p',
     LABEL_ANGULAR_SPEED = 's',
@@ -43,11 +46,16 @@ enum LABEL_STM32 {
     LABEL_EMERGENCY_STOP = 'a'
 };
 
+/**
+ * Open serial link with STM32
+ * @return File descriptor
+ * @throw std::runtime_error if it fails
+ */
 int ComStm32::Open() {
-    fd = open(USART_FILENAME, O_RDWR | O_NOCTTY /*| O_NDELAY*/); //Open in non blocking read/write mode
+    fd = open(USART_FILENAME, O_RDWR | O_NOCTTY /*| O_NDELAY*/); //Open in blocking read/write mode
     if (fd == -1) {
         //ERROR - CAN'T OPEN SERIAL PORT
-        throw std::runtime_error{"Error - Unable to open UART "+ string(USART_FILENAME)+".  Ensure it is not in use by another application"};
+        throw std::runtime_error{"Error - Unable to open UART " + string(USART_FILENAME) + ".  Ensure it is not in use by another application"};
         exit(EXIT_FAILURE);
     }
 
@@ -64,13 +72,20 @@ int ComStm32::Open() {
     return fd;
 }
 
+/**
+ * Close serial link
+ * @return Success if above 0, failure if below 0
+ */
 int ComStm32::Close() {
     return close(fd);
 }
 
 /**
-        Reads a message from the serial port. 
-        The function is blocked until a suitable message is received. 
+ * Get a message from STM32
+ * @return Message currently received
+ * @attention A message object is created (new) when receiving data from STM32. You MUST remember to destroy is (delete) after use
+ * @attention Read method is blocking until a message is received
+ * @warning Read is not thread safe : Do not call it in multiple tasks simultaneously
  */
 Message* ComStm32::Read() {
     int rxLength;
@@ -103,7 +118,6 @@ Message* ComStm32::Read() {
         } else if (rxLength == 0) {
             // nothing to do
         } else if (receivedChar == '<') { // start of frame received
-            //printf ("received Start\n");
             i = 0;
 
             do {
@@ -116,9 +130,7 @@ Message* ComStm32::Read() {
 
                     return NULL;
                 }
-            }            while (i < 6);
-
-            //printf ("data received (%i)\n", rxLength);
+            } while (i < 6);
 
             if (rxBuffer[5] == '\n') {
                 messageComplete = true;
@@ -136,18 +148,10 @@ Message* ComStm32::Read() {
 }
 
 /**
-        Takes an array of 7 bytes and tries to format it to a message structure
-
-        @params unsigned char * mesg : an array of 6 bytes.
-                the byte 0 should be an ascii char that is the label. It define what the data represent
-                the bytes 1 to 4 are the float value
-                the byte 5 should always be a '\n'
-        @params message_serial * m : a pointer of a message. If there was an issue when reading the serial port
-                the message takes 'e' (for error) as its label
-
-        @returns 0 if there was an issue while reading the message else 1
+ * Convert an array of char to its message representation (when receiving data from stm32)
+ * @param bytes Array of char
+ * @return Message corresponding to received array of char
  */
-
 Message* ComStm32::CharToMessage(unsigned char *bytes) {
 
     Message *msg = __null;
@@ -206,54 +210,46 @@ Message* ComStm32::CharToMessage(unsigned char *bytes) {
 }
 
 /**
-        Converts an array of 4 bytes into a float
-
-        @params unsigned char * bytes : array of 4 bytes
-
-        @return the float value
+ * Convert an array of char to float
+ * @param bytes Array of char, containing a binary image of a float
+ * @return Float value
  */
-
 float ComStm32::CharToFloat(unsigned char *bytes) {
     unsigned long value;
+
     union {
         unsigned char buffer[4];
         float f;
     } convert;
 
-    convert.buffer[0]=bytes[0];
-    convert.buffer[1]=bytes[1];
-    convert.buffer[2]=bytes[2];
-    convert.buffer[3]=bytes[3];
-    
+    convert.buffer[0] = bytes[0];
+    convert.buffer[1] = bytes[1];
+    convert.buffer[2] = bytes[2];
+    convert.buffer[3] = bytes[3];
+
     //value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
 
     return convert.f;
 }
 
 /**
-        Converts an array of 4 bytes into a float
-
-        @params unsigned char * bytes : array of 4 bytes
-
-        @return the float value
+ * Convert an array of char to integer
+ * @param bytes Array of char, containing a binary image of an integer
+ * @return Integer value
  */
-
 unsigned int ComStm32::CharToInt(unsigned char *bytes) {
     unsigned long value;
 
     value = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | (bytes[0]);
 
-    return (unsigned int)value;
+    return (unsigned int) value;
 }
 
 /**
-        Converts an array of 4 bytes into a float
-
-        @params unsigned char * bytes : array of 4 bytes
-
-        @return the float value
+ * Convert an array of char to boolean
+ * @param bytes Array of char, containing a binary image of a boolean
+ * @return Boolean value
  */
-
 bool ComStm32::CharToBool(unsigned char *bytes) {
     unsigned long value;
 
@@ -264,6 +260,14 @@ bool ComStm32::CharToBool(unsigned char *bytes) {
     else return true;
 }
 
+/**
+ * Send a message to STM32
+ * @param msg Message to send to STM32
+ * @return 1 if success, 0 otherwise
+ * @attention Message is destroyed (delete) after being sent. You do not need to delete it yourself
+ * @attention Write is blocking until message is written into buffer (linux side)
+ * @warning Write is not thread save : check that multiple tasks can't access this method simultaneously  
+ */
 int ComStm32::Write(Message* msg) {
     unsigned char buffer[7];
     int ret_val = 0;
@@ -272,15 +276,6 @@ int ComStm32::Write(Message* msg) {
 
     Write_Pre();
 
-//    printf ("Message to send: %s\n", msg->ToString().c_str());
-//    printf ("Message converted: ");
-//    for (int i=0; i<7; i++)
-//    {
-//        printf ("%02X ", buffer[i]);
-//    }
-//    printf ("\n");
-//    fflush(stdout);
-    
     if (this->fd != -1) {
         int count = write(this->fd, &buffer[0], 7); //Filestream, bytes to write, number of bytes to write
         if (count < 0) {
@@ -292,12 +287,17 @@ int ComStm32::Write(Message* msg) {
 
     // deallocation of msg
     delete(msg);
-    
+
     Write_Post();
 
     return ret_val;
 }
 
+/**
+ * Convert a message to its array of char representation (for sending command to stm32)
+ * @param msg Message to be sent to STM32
+ * @param buffer Array of char, image of message to send
+ */
 void ComStm32::MessageToChar(Message *msg, unsigned char *buffer) {
     float val_f;
     int val_i;
@@ -305,7 +305,7 @@ void ComStm32::MessageToChar(Message *msg, unsigned char *buffer) {
 
     buffer[0] = '<';
     buffer[6] = '\n';
-    
+
     switch (msg->GetID()) {
         case MESSAGE_TORQUE:
             buffer[1] = LABEL_TORQUE;

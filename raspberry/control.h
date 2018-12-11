@@ -28,11 +28,11 @@ class Control {
 public:
     /**
      * Algorithm for computing control torque needed to bring user angle (beta) to 0
-     * @param AnglePosition Angle between segway and ground
-     * @param AngularSpeed Angular speed of wheel
+     * @param anglePosition Angle between segway and ground
+     * @param angularSpeed Angular speed of wheel
      * @return Torque to provide to STM32 for bring back Beta angle to zero
      */
-    static float ComputeTorque(float AnglePosition, float AngularSpeed);
+    static float ComputeTorque(float anglePosition, float angularSpeed);
     
 private:
     /**

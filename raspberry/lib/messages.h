@@ -26,8 +26,8 @@
  * @brief List of available message ID
  * 
  */
-enum MESSAGE_ID {
-    MESSAGE_ANGLE_POSITION=0,
+typedef enum {
+    MESSAGE_ANGLE_POSITION = 0,
     MESSAGE_ANGULAR_SPEED,
     MESSAGE_LINEAR_SPEED,
     MESSAGE_BATTERY,
@@ -37,7 +37,7 @@ enum MESSAGE_ID {
     MESSAGE_EMERGENCY_STOP,
     MESSAGE_LOG,
     MESSAGE_EMPTY
-};
+} MessageID;
 
 using namespace std;
 
@@ -53,7 +53,7 @@ public:
      * Create a new, empty message
      */
     Message();
-    
+
     /**
      * Destroy message
      */
@@ -64,25 +64,28 @@ public:
      * @return A string describing message contents
      */
     virtual string ToString();
-    
+
     /**
      * Allocate a new mesage and copy contents of current message
      * @return A message, copy of current
      */
     virtual Message* Copy();
-   
+
     /**
      * Get message ID
      * @return Current message ID
      */
-    MESSAGE_ID GetID() { return messageID; }
-    
+    MessageID GetID() {
+        return messageID;
+    }
+
     /**
      * Set message ID
      * @param id Message ID
      */
-    virtual void SetID(MESSAGE_ID id) {}
-    
+    virtual void SetID(MessageID id) {
+    }
+
     /**
      * Comparison operator
      * @param msg Message to be compared
@@ -103,16 +106,16 @@ public:
 
 protected:
     /**
-     * Message identifier (@see MESSAGE_ID)
+     * Message identifier (@see MessageID)
      */
-    MESSAGE_ID messageID;
-    
+    MessageID messageID;
+
     /**
      * Verify if message ID is compatible with current message type
      * @param id Message ID
      * @return true, if message ID is acceptable, false otherwise
      */
-    virtual bool CheckID(MESSAGE_ID id);
+    virtual bool CheckID(MessageID id);
 };
 
 /**
@@ -127,58 +130,62 @@ public:
      * Create a new, empty float message
      */
     MessageFloat();
-    
+
     /**
      * Create a new float message, with given ID and value
      * @param id Message ID
      * @param val Message value
      * @throw std::runtime_error if message ID is incompatible with float data
      */
-    MessageFloat(MESSAGE_ID id, float val);
-    
+    MessageFloat(MessageID id, float val);
+
     /**
      * Set message ID
      * @param id Message ID
      * @throw std::runtime_error if message ID is incompatible with float data
      */
-    void SetID(MESSAGE_ID id);
-    
+    void SetID(MessageID id);
+
     /**
      * Get message value (float)
      * @return Float value
      */
-    float GetValue() { return value; }
-    
+    float GetValue() {
+        return value;
+    }
+
     /**
      * Set message value (float)
      * @param val Float value to store in message
      */
-    void SetValue(float val) { this->value = val; }
-    
+    void SetValue(float val) {
+        this->value = val;
+    }
+
     /**
      * Translate content of message into a string that can be displayed
      * @return A string describing message contents
      */
     string ToString();
-    
+
     /**
      * Allocate a new mesage and copy contents of current message
      * @return A message, copy of current
      */
     Message* Copy();
-    
+
 protected:
     /**
      * Message float value
      */
     float value;
-    
+
     /**
      * Verify if message ID is compatible with current message type
      * @param id Message ID
      * @return true, if message ID is acceptable, false otherwise
      */
-    bool CheckID(MESSAGE_ID id);
+    bool CheckID(MessageID id);
 };
 
 /**
@@ -187,64 +194,68 @@ protected:
  * @brief String message class
  * 
  */
-class MessageString: public Message {
+class MessageString : public Message {
 public:
     /**
      * Create a new, empty string message
      */
     MessageString();
-    
+
     /**
      * Create a new string message, with given ID and string
      * @param id Message ID
      * @param s Message string
      * @throw std::runtime_error if message ID is incompatible with string data
      */
-    MessageString(MESSAGE_ID id, string s);
-    
+    MessageString(MessageID id, string s);
+
     /**
      * Set message ID
      * @param id Message ID
      * @throw std::runtime_error if message ID is incompatible with string data
      */
-    void SetID(MESSAGE_ID id);
-    
+    void SetID(MessageID id);
+
     /**
      * Get message string
      * @return String
      */
-    string GetString() { return s; }
-    
+    string GetString() {
+        return s;
+    }
+
     /**
      * Set message string
      * @param s String to store in message
      */
-    void SetString(string s) { this->s = s; }
-    
+    void SetString(string s) {
+        this->s = s;
+    }
+
     /**
      * Translate content of message into a string that can be displayed
      * @return A string describing message contents
      */
     string ToString();
-    
+
     /**
      * Allocate a new message and copy contents of current message
      * @return A message, copy of current
      */
     Message* Copy();
-    
+
 protected:
     /**
      * Message content
      */
     string s;
-    
+
     /**
      * Verify if message ID is compatible with current message type
      * @param id Message ID
      * @return true, if message ID is acceptable, false otherwise
      */
-    bool CheckID(MESSAGE_ID id);
+    bool CheckID(MessageID id);
 };
 
 /**
@@ -259,58 +270,62 @@ public:
      * Create a new, empty boolean message
      */
     MessageBool();
-    
+
     /**
      * Create a new boolean message, with given ID and boolean value
      * @param id Message ID
      * @param state Boolean value
      * @throw std::runtime_error if message ID is incompatible with boolean data
      */
-    MessageBool(MESSAGE_ID id, bool state);
-    
+    MessageBool(MessageID id, bool state);
+
     /**
      * Set message ID
      * @param id Message ID
      * @throw std::runtime_error if message ID is incompatible with boolean data
      */
-    void SetID(MESSAGE_ID id);
-    
+    void SetID(MessageID id);
+
     /**
      * Get message state
      * @return Boolean state
      */
-    bool GetState() { return state; }
-    
+    bool GetState() {
+        return state;
+    }
+
     /**
      * Set message state
      * @param state Boolean state to store in message
      */
-    void SetState(bool state) { this->state = state; }
-    
-     /**
+    void SetState(bool state) {
+        this->state = state;
+    }
+
+    /**
      * Translate content of message into a string that can be displayed
      * @return A string describing message contents
      */
     string ToString();
-    
+
     /**
      * Allocate a new message and copy contents of current message
      * @return A message, copy of current
      */
     Message* Copy();
-    
+
 protected:
     /**
      * Message state
      */
     bool state;
-    
+
     /**
      * Verify if message ID is compatible with current message type
      * @param id Message ID
      * @return true, if message ID is acceptable, false otherwise
      */
-    bool CheckID(MESSAGE_ID id);
+    bool CheckID(MessageID id);
 };
 
 #endif /* __MESSAGES_H__ */

@@ -61,6 +61,7 @@
             <pElem>/usr/xenomai/include/mercury</pElem>
             <pElem>/usr/xenomai/include</pElem>
           </incDir>
+          <commandLine>-Wno-pmf-conversions</commandLine>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/segway_supervisor</output>
@@ -83,31 +84,31 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
+      <item path="control.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="control.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="parameters.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="lib/comgui.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/comstm32.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="control.cpp" ex="false" tool="1" flavor2="0">
+      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="parameters.cpp" ex="false" tool="1" flavor2="0">
+      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/trace.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="parameters.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="parameters.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tasks.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -138,31 +139,31 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
+      <item path="control.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="control.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="parameters.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="lib/comgui.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/comstm32.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="control.cpp" ex="false" tool="1" flavor2="0">
+      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/messages.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="parameters.cpp" ex="false" tool="1" flavor2="0">
+      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/trace.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="parameters.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="parameters.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tasks.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -211,31 +212,31 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
+      <item path="control.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="control.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="parameters.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="lib/comgui.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/comstm32.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="control.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/messages.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="parameters.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/trace.cpp" ex="true" tool="1" flavor2="8">
       </item>
+      <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="parameters.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="parameters.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tasks.cpp" ex="false" tool="1" flavor2="8">
       </item>

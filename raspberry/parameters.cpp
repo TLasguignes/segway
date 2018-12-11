@@ -17,54 +17,43 @@
 
 #include "parameters.h"
 
-/*! \def BATTERY_WARNING_UNKNOWN
-    \brief Valeur décrivant un état inconnu de la batterie
+/**
+ * @brief Initial torque value
  */
-#define BATTERY_WARNING_UNKNOWN             (-1.0)
-
-/*! \def VITESSE_ANG_INITIAL
-    \brief Valeur décrivant la valeur initial des consignes de commandes 
- */
-#define CONSIGNE_INITIAL                    (0.0)
-
-/*! \def ANGLE_INITIAL
-    \brief Valeur décrivant la valeur initial de angle
- */
-#define ANGLE_INITIAL                       (0.0)
-
-/*! \def VITESSE_ANG_INITIAL
-    \brief Valeur décrivant la valeur initial de vitesse angulaire
- */
-#define VITESSE_ANG_INITIAL                 (0.0)
-
-/*! \def DIRECTION_INITIAL
-    \brief Valeur décrivant la valeur initial de angle de direction
- */
-#define DIRECTION_INITIAL                   (0.0)
-
-/*! \def BETA_INITIAL    
-    \brief Valeur décrivant la valeur initial de beta
- */
-#define BETA_INITIAL                        (0.0)
+#define INITIAL_TORQUE              (0.0)
 
 /**
- * \fn Constructeur de classe
- * \brief Constructeur de l'objet Angles.
+ * @brief Initial angular position
+ */
+#define INITIAL_ANGLE_POSITION      (0.0)
+
+/**
+ * @brief Initial angular speed
+ * 
+ */
+#define INITIAL_ANGULAR_SPEED       (0.0)
+
+/**   
+ * @brief Initial beta angle
+ */
+#define INITIAL_BETA                (0.0)
+
+/**
+ * Create new Parameter object, with parameters initialized to default value
  */
 Parameters::Parameters() {
-    angularPosition = ANGLE_INITIAL;
-    angularSpeed = VITESSE_ANG_INITIAL;
+    angularPosition = INITIAL_ANGLE_POSITION;
+    angularSpeed = INITIAL_ANGULAR_SPEED;
     linearSpeed = 0.0;
     battery = BATTERY_LEVEL_UNKNOWN;
-    beta = BETA_INITIAL;
-    torque = CONSIGNE_INITIAL;
+    beta = INITIAL_BETA;
+    torque = INITIAL_TORQUE;
     userPresence = false;
     emergencyStop = false;
 }
 
 /**
- * \fn Destructeur de classe
- * \brief Destructeur de l'objet Angles.
+ * Destroy Parameter object
  */
 Parameters::~Parameters(void) {
 }
@@ -72,86 +61,129 @@ Parameters::~Parameters(void) {
 // Getters
 
 /**
- * \fn float angle()
- * \brief Accesseur de la valeur _angle  de l'objet Angles.
- * \return _angle
+ * Get current angular position
+ * @return Current angular position (segway)
  */
 float Parameters::AngularPosition() {
     return this->angularPosition;
 }
 
 /**
- * \fn float vitesse_ang()
- * \brief Accesseur de la valeur _vitesse_ang  de l'objet Angles.
- * \return _vitesse_ang
+ * Get current angular speed
+ * @return Current angular speed
  */
 float Parameters::AngularSpeed() {
     return this->angularSpeed;
 }
 
+/**
+ * Get current linear speed
+ * @return Current linear speed
+ */
 float Parameters::LinearSpeed() {
     return this->linearSpeed;
 }
 
+/**
+ * Get current battery level
+ * @return Current battery level
+ */
 float Parameters::Battery() {
     return this->battery;
 }
 
+/**
+ * Get current torque (as provided by STM32)
+ * @return Current torque
+ */
 float Parameters::Torque() {
     return this->torque;
 }
 
+/**
+ * Get current beta angle 
+ * @return Current beta angle
+ */
 float Parameters::Beta() {
     return this->beta;
 }
 
+/**
+ * Get user presence
+ * @return true if user is present, false otherwise
+ */
 bool Parameters::UserPresence() {
     return this->userPresence;
 }
 
+/**
+ * Get emergency state
+ * @return True if emergency signal must be raised, false otherwise
+ */
 bool Parameters::EmergencyStop() {
     return this->emergencyStop;
 }
 
-
 /**
- * \fn void set_angle(float theta)
- * \brief Mise à jour de l'angle de l'objet Angles.
- * \param theta Nouvelle valeur de l'angle (entre -20.0 et 20.0)
+ * Set angular position
+ * @param angle Float value for current angular position
  */
 void Parameters::SetAngularPosition(float angle) {
     this->angularPosition = angle;
 }
 
 /**
- * \fn void set_vitesse_ang(float thetap)
- * \brief Mise à jour de la vitesse angulaire de l'objet Angles.
- * \param theta Nouvelle valeur de la vitesse angulaire
+ * Set angular speed
+ * @param angularSpeed Float value for current angular speed
  */
 void Parameters::SetAngularSpeed(float angularSpeed) {
     this->angularSpeed = angularSpeed;
 }
 
+/**
+ * Set linear speed
+ * @param linearSpeed Float value for current linear speed
+ */
 void Parameters::SetLinearSpeed(float linearSpeed) {
     this->linearSpeed = linearSpeed;
 }
 
+/**
+ * Set battery level
+ * @param battery Float value for current battery level
+ */
 void Parameters::SetBattery(float battery) {
     this->battery = battery;
 }
 
+/**
+ * Set torque
+ * @param torque Float value for current torque
+ */
 void Parameters::SetTorque(float torque) {
     this->torque = torque;
 }
 
+/**
+ * Set beta angle
+ * @param beta Float value for current beta angle
+ */
 void Parameters::SetBeta(float beta) {
     this->beta = beta;
 }
 
+/**
+ * Set user presence
+ * @param state Boolean representation of user presence
+ */
 void Parameters::SetUserPresence(bool state) {
     this->userPresence = state;
 }
 
+/**
+ * Set emergency state
+ * @param state boolean representing emergency state
+ */
 void Parameters::SetEmergencyStop(bool state) {
     this->emergencyStop = state;
 }

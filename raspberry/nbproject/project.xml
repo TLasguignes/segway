@@ -10,7 +10,7 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>/home/dimercur/Documents/Travail/git/segway/simulator/raspberry</sourceRootElem>
+                <sourceRootElem>./</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

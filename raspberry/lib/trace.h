@@ -15,12 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * \author INSA Toulouse
- * \version 1.0
- * \date 20 Mai 2017
- */
-
 #ifndef __TRACE_H__
 #define __TRACE_H__
 
@@ -44,12 +38,14 @@ public:
      * Constructor, initialize start time
      * 
      */
-    Trace();
+    Trace() {
+         this->beginTime = rt_timer_ticks2ns(rt_timer_read());
+    }
 
     /**
      * Destructor
      */
-    ~Trace();
+    ~Trace() {}
 
     /**
      * Get the time between the start of recording and when it is called
@@ -73,7 +69,7 @@ public:
      * Logs when the task has acquired a mutex, it must be written just after the rt_mutex_acquire();
      * @param mut Reference to the mutex
      */
-    Message* MutexAquired(RT_MUTEX* mut);
+    Message* MutexAcquired(RT_MUTEX* mut);
 
     /**
      * Logs when the task releases a mutex, it must be written just after the rt_mutex_release();
@@ -85,7 +81,7 @@ public:
      * Logs when the task is waiting at a semaphore, it must be written just before the rt_sem_p();
      * @param sem Reference to the semaphore
      */
-    Message* SemWaiting(RT_SEM* sem);
+    Message* WaitForSem(RT_SEM* sem);
 
     /**
      * Logs when the task has entered a semaphore, it must be written just after the rt_sem_p()
@@ -133,7 +129,7 @@ private:
 
     /**
      * Generic method to log en event regarding a mutex
-     * @param mut Reference to the mutex
+     * @paramB mut Reference to the mutex
      * @param event Type of event regarding mutex
      * @return A string message containing information about mutex
      */

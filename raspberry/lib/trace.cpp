@@ -28,21 +28,6 @@ typedef enum {
     SEM, MUTEX, TASK, TASK_DELETE
 } message_type;
 
-/**
- * Constructor, initialize start time
- * 
- */
-Trace::Trace() {
-    // initialize reference time at the begining of the log
-    this->beginTime = rt_timer_ticks2ns(rt_timer_read());
-}
-
-/**
- * Destructor
- */
-Trace::~Trace() {
-}
-
 ///**
 // * \fn int write_in_queue(RT_QUEUE *msg_queue, void * buf, int size) 
 // * \brief 	Writes a message into a queue
@@ -155,7 +140,7 @@ Message* Trace::WaitForMutex(RT_MUTEX* mut) {
  * Logs when the task has acquired a mutex, it must be written just after the rt_mutex_acquire();
  * @param mut Reference to the mutex
  */
-Message* Trace::MutexAquired(RT_MUTEX* mut) {
+Message* Trace::MutexAcquired(RT_MUTEX* mut) {
     return this->MutexGeneric(mut, "acquired");
 }
 
@@ -194,7 +179,7 @@ Message* Trace::SemGeneric(RT_SEM* sem, string event) {
  * Logs when the task is waiting at a semaphore, it must be written just before the rt_sem_p();
  * @param sem Reference to the semaphore
  */
-Message* Trace::SemWaiting(RT_SEM* sem) {
+Message* Trace::WaitForSem(RT_SEM* sem) {
     return this->SemGeneric(sem, "waiting");
 }
 

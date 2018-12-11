@@ -15,20 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* 
- * File:   messages.cpp
- * Author: dimercur
- * 
- * Created on 22 novembre 2018, 15:18
- */
-
 #include "messages.h"
 #include <exception>
 #include <stdexcept>
 #include <string>
 
-using std::exception;
-
+/*
+ * Constants used with ToString method, for printing message id
+ */
 const string MESSAGE_ID_STRING[] = {
     "Angle Position",
     "Angular Speed",
@@ -42,13 +36,23 @@ const string MESSAGE_ID_STRING[] = {
     "Empty"
 };
 
+/**
+ * Create a new, empty message
+ */
 Message::Message() {
     this->messageID = MESSAGE_EMPTY;
 }
 
+/**
+ * Destroy message
+ */
 Message::~Message() {
 }
 
+/**
+ * Translate content of message into a string that can be displayed
+ * @return A string describing message contents
+ */
 string Message::ToString() {
     if (CheckID(this->messageID))
         return "Id: \"" + MESSAGE_ID_STRING[this->messageID] + "\"";
@@ -56,36 +60,65 @@ string Message::ToString() {
         return "Invalid message";
 }
 
+/**
+ * Allocate a new mesage and copy contents of current message
+ * @return A message, copy of current
+ */
 Message* Message::Copy() {
     Message *msg = new Message();
 
     return msg;
 }
 
-bool Message::CheckID(MESSAGE_ID id) {
+/**
+ * Get message ID
+ * @return Current message ID
+ */
+bool Message::CheckID(MessageID id) {
     if ((id != MESSAGE_EMPTY)) {
         return false;
     } else return true;
 }
 
-// class MessageFloat
+/* MessageFloat */
+
+/**
+ * Create a new, empty float message
+ */
 MessageFloat::MessageFloat() {
     value = 0.0;
 }
 
-MessageFloat::MessageFloat(MESSAGE_ID id, float val) {
+/**
+ * Create a new float message, with given ID and value
+ * @param id Message ID
+ * @param val Message value
+ * @throw std::runtime_error if message ID is incompatible with float data
+ */
+MessageFloat::MessageFloat(MessageID id, float val) {
     MessageFloat::SetID(id);
-        
+
     value = val;
 }
 
-void MessageFloat::SetID(MESSAGE_ID id) {
+/**
+ * Set message ID
+ * @param id Message ID
+ * @throw std::runtime_error if message ID is incompatible with float data
+ */
+void MessageFloat::SetID(MessageID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id for MessageFloat"};
+        throw std::runtime_error {
+        "Invalid message id for MessageFloat"
+    };
 }
 
+/**
+ * Translate content of message into a string that can be displayed
+ * @return A string describing message contents
+ */
 string MessageFloat::ToString() {
     if (CheckID(this->messageID))
         return "Id: \"" + MESSAGE_ID_STRING[this->messageID] + "\"\nValue: " + to_string(this->value);
@@ -93,11 +126,20 @@ string MessageFloat::ToString() {
         return "Invalid message";
 }
 
+/**
+ * Allocate a new mesage and copy contents of current message
+ * @return A message, copy of current
+ */
 Message* MessageFloat::Copy() {
     return new MessageFloat(this->messageID, this->value);
 }
 
-bool MessageFloat::CheckID(MESSAGE_ID id) {
+/**
+ * Verify if message ID is compatible with current message type
+ * @param id Message ID
+ * @return true, if message ID is acceptable, false otherwise
+ */
+bool MessageFloat::CheckID(MessageID id) {
     if ((id != MESSAGE_ANGLE_POSITION) &&
             (id != MESSAGE_ANGULAR_SPEED) &&
             (id != MESSAGE_BATTERY) &&
@@ -108,24 +150,45 @@ bool MessageFloat::CheckID(MESSAGE_ID id) {
     } else return true;
 }
 
-// class MessageString
+/* class MessageString */
+
+/**
+ * Create a new, empty string message
+ */
 MessageString::MessageString() {
-    s=string("");
+    s = string("");
 }
 
-MessageString::MessageString(MESSAGE_ID id, string s) {
+/**
+ * Create a new string message, with given ID and string
+ * @param id Message ID
+ * @param s Message string
+ * @throw std::runtime_error if message ID is incompatible with string data
+ */
+MessageString::MessageString(MessageID id, string s) {
     MessageString::SetID(id);
-        
+
     this->s = s;
 }
 
-void MessageString::SetID(MESSAGE_ID id) {
+/**
+ * Set message ID
+ * @param id Message ID
+ * @throw std::runtime_error if message ID is incompatible with string data
+ */
+void MessageString::SetID(MessageID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id for MessageString"};
+        throw std::runtime_error {
+        "Invalid message id for MessageString"
+    };
 }
 
+/**
+ * Translate content of message into a string that can be displayed
+ * @return A string describing message contents
+ */
 string MessageString::ToString() {
     if (CheckID(this->messageID))
         return "Id: \"" + MESSAGE_ID_STRING[this->messageID] + "\"\nString: \"" + this->s + "\"";
@@ -133,34 +196,64 @@ string MessageString::ToString() {
         return "Invalid message";
 }
 
+/**
+ * Allocate a new message and copy contents of current message
+ * @return A message, copy of current
+ */
 Message* MessageString::Copy() {
     return new MessageString(this->messageID, this->s);
 }
 
-bool MessageString::CheckID(MESSAGE_ID id) {
+/**
+ * Verify if message ID is compatible with current message type
+ * @param id Message ID
+ * @return true, if message ID is acceptable, false otherwise
+ */
+bool MessageString::CheckID(MessageID id) {
     if ((id != MESSAGE_LOG)) {
         return false;
     } else return true;
 }
 
-// class MessageBool
+/* class MessageBool */
+
+/**
+ * Create a new, empty boolean message
+ */
 MessageBool::MessageBool() {
-    state=false;
+    state = false;
 }
 
-MessageBool::MessageBool(MESSAGE_ID id, bool state) {
+/**
+ * Create a new boolean message, with given ID and boolean value
+ * @param id Message ID
+ * @param state Boolean value
+ * @throw std::runtime_error if message ID is incompatible with boolean data
+ */
+MessageBool::MessageBool(MessageID id, bool state) {
     MessageBool::SetID(id);
-    
+
     this->state = state;
 }
 
-void MessageBool::SetID(MESSAGE_ID id) {
+/**
+ * Set message ID
+ * @param id Message ID
+ * @throw std::runtime_error if message ID is incompatible with boolean data
+ */
+void MessageBool::SetID(MessageID id) {
     if (CheckID(id))
         messageID = id;
     else
-        throw std::runtime_error{"Invalid message id for MessageBool"};
+        throw std::runtime_error {
+        "Invalid message id for MessageBool"
+    };
 }
 
+/**
+ * Translate content of message into a string that can be displayed
+ * @return A string describing message contents
+ */
 string MessageBool::ToString() {
     if (CheckID(this->messageID))
         return "Id: \"" + MESSAGE_ID_STRING[this->messageID] + "\"\nState: \"" + to_string(this->state) + "\"";
@@ -168,13 +261,22 @@ string MessageBool::ToString() {
         return "Invalid message";
 }
 
+/**
+ * Allocate a new message and copy contents of current message
+ * @return A message, copy of current
+ */
 Message* MessageBool::Copy() {
     return new MessageBool(this->messageID, this->state);
 }
 
-bool MessageBool::CheckID(MESSAGE_ID id) {
+/**
+ * Verify if message ID is compatible with current message type
+ * @param id Message ID
+ * @return true, if message ID is acceptable, false otherwise
+ */
+bool MessageBool::CheckID(MessageID id) {
     if ((id != MESSAGE_EMERGENCY_STOP) &&
-        (id != MESSAGE_USER_PRESENCE)) {
+            (id != MESSAGE_USER_PRESENCE)) {
         return false;
     } else return true;
 }
