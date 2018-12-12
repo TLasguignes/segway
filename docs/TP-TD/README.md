@@ -1,7 +1,7 @@
 # Dossier Etudiant
 
-* Sujet_TD.docx: 
+* Sujet_TD.odt: 
   Sujet du TD
 
-* Sujet_TP.docx:
+* Sujet_TP.odt:
   Sujet du TP

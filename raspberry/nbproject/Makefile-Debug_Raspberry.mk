@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/lib/comgui.o \
 	${OBJECTDIR}/lib/comstm32.o \
 	${OBJECTDIR}/lib/messages.o \
+	${OBJECTDIR}/lib/trace.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/parameters.o \
 	${OBJECTDIR}/tasks.o
@@ -87,6 +88,11 @@ ${OBJECTDIR}/lib/messages.o: lib/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/messages.o lib/messages.cpp
+
+${OBJECTDIR}/lib/trace.o: lib/trace.cpp
+	${MKDIR} -p ${OBJECTDIR}/lib
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/trace.o lib/trace.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
