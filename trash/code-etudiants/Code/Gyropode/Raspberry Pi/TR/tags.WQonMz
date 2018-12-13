@@ -1,0 +1,124 @@
+EXECUTABLE	Makefile	/^EXECUTABLE :=  main$/;"	m
+SKIN	Makefile	/^SKIN       :=  alchemy	$/;"	m
+XENO_CONFIG	Makefile	/^XENO_CONFIG := \/usr\/xenomai\/bin\/xeno-config$/;"	m
+CFLAGS	Makefile	/^CFLAGS  := $(shell $(XENO_CONFIG) --$(SKIN) --cflags)$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS := $(shell $(XENO_CONFIG) --$(SKIN) --ldflags) fonctions.cpp global.cpp lib\/src\/*$/;"	m
+CC	Makefile	/^CC      := $(shell $(XENO_CONFIG) --cc)$/;"	m
+Asservissement	fonctions.cpp	/^void Asservissement(void *arg) \/* OK *\/$/;"	f
+Presence_User	fonctions.cpp	/^ void Presence_User(void *arg)$/;"	f
+Surveillance_Batterie	fonctions.cpp	/^ void Surveillance_Batterie(void *arg) \/* OK *\/$/;"	f
+Communication	fonctions.cpp	/^void Communication(void *arg) $/;"	f
+Arret_Urgence	fonctions.cpp	/^void Arret_Urgence(void *arg){$/;"	f
+Envoyer	fonctions.cpp	/^void Envoyer(void *arg){$/;"	f
+Affichage	fonctions.cpp	/^void Affichage(void *arg){$/;"	f
+Communication_Android	fonctions.cpp	/^void Communication_Android (void *arg){$/;"	f
+FONCTIONS_H	fonctions.h	9;"	d
+Envoyer	fonctions.h	/^void Envoyer(void *arg);$/;"	p
+Asservissement	fonctions.h	/^void Asservissement(void * arg);$/;"	p
+Presence_User	fonctions.h	/^void Presence_User(void * arg);$/;"	p
+Surveillance_Batterie	fonctions.h	/^void Surveillance_Batterie(void * arg);$/;"	p
+Communication	fonctions.h	/^void Communication(void * arg);$/;"	p
+Affichage	fonctions.h	/^void Affichage(void * arg);$/;"	p
+Arret_Urgence	fonctions.h	/^void Arret_Urgence(void *arg);$/;"	p
+Communication_Android	fonctions.h	/^void Communication_Android(void *arg);$/;"	p
+arret	global.cpp	/^int arret = 0;$/;"	v
+etat_reception	global.cpp	/^int etat_reception = 0;$/;"	v
+status	global.cpp	/^int status = 0;$/;"	v
+etat_com	global.cpp	/^int etat_com = 0;$/;"	v
+presence_user	global.cpp	/^int presence_user = 1;$/;"	v
+android	global.cpp	/^int android = 0;$/;"	v
+etat_angle	global.cpp	/^Angles etat_angle;$/;"	v
+batterie	global.cpp	/^Battery batterie;$/;"	v
+consigne_couple	global.cpp	/^Consigne consigne_couple;$/;"	v
+vitesse_lin	global.cpp	/^Vitesse vitesse_lin;$/;"	v
+var_mutex_etat_com	global.cpp	/^RT_MUTEX var_mutex_etat_com; $/;"	v
+var_mutex_vitesse	global.cpp	/^RT_MUTEX var_mutex_vitesse; $/;"	v
+var_mutex_etat_angle	global.cpp	/^RT_MUTEX var_mutex_etat_angle;$/;"	v
+var_mutex_consigne_couple	global.cpp	/^RT_MUTEX var_mutex_consigne_couple;$/;"	v
+var_mutex_status	global.cpp	/^RT_MUTEX var_mutex_status;$/;"	v
+var_mutex_etat_reception	global.cpp	/^RT_MUTEX var_mutex_etat_reception;$/;"	v
+var_mutex_batterie	global.cpp	/^RT_MUTEX var_mutex_batterie;$/;"	v
+var_mutex_presence_user	global.cpp	/^RT_MUTEX var_mutex_presence_user ;$/;"	v
+var_mutex_arret	global.cpp	/^RT_MUTEX var_mutex_arret ;$/;"	v
+var_sem_arret	global.cpp	/^RT_SEM var_sem_arret;$/;"	v
+var_sem_envoyer	global.cpp	/^RT_SEM var_sem_envoyer;$/;"	v
+queue_Msg2STM	global.cpp	/^RT_QUEUE queue_Msg2STM;$/;"	v
+th_Communication	global.cpp	/^RT_TASK th_Communication;$/;"	v
+th_Asservissement	global.cpp	/^RT_TASK th_Asservissement;$/;"	v
+th_Affichage	global.cpp	/^RT_TASK th_Affichage; $/;"	v
+th_Surveillance_Batterie	global.cpp	/^RT_TASK th_Surveillance_Batterie; $/;"	v
+th_Envoyer	global.cpp	/^RT_TASK th_Envoyer; $/;"	v
+th_Presence_User	global.cpp	/^RT_TASK th_Presence_User; $/;"	v
+th_Arret_Urgence	global.cpp	/^RT_TASK th_Arret_Urgence;$/;"	v
+th_Communication_Android	global.cpp	/^RT_TASK th_Communication_Android;$/;"	v
+info_float_new	global.cpp	/^info_float info_float_new(char lab, float dat)$/;"	f
+info_int_new	global.cpp	/^info_int info_int_new(char lab, int dat)$/;"	f
+GLOBAL_H	global.h	9;"	d
+label	global.h	/^	char label;$/;"	m	struct:__anon1
+data	global.h	/^	float data;$/;"	m	struct:__anon1
+info_float	global.h	/^}info_float;$/;"	t	typeref:struct:__anon1
+label	global.h	/^	char label;$/;"	m	struct:__anon2
+data	global.h	/^	int data;$/;"	m	struct:__anon2
+info_int	global.h	/^}info_int;$/;"	t	typeref:struct:__anon2
+STOP	global.h	26;"	d
+k1	global.h	27;"	d
+k2	global.h	28;"	d
+PI	global.h	29;"	d
+TEN_SECONDS	global.h	30;"	d
+SECENTOP	global.h	31;"	d
+MSG_LENGTH	global.h	32;"	d
+MSG_QUEUE_SIZE	global.h	33;"	d
+DEB	global.h	34;"	d
+PRIORITY_TH_COMMUNICATION	global.h	37;"	d
+PRIORITY_TH_ASSERVISSEMENT	global.h	38;"	d
+PRIORITY_TH_AFFICHAGE	global.h	39;"	d
+PRIORITY_TH_BATTERIE	global.h	40;"	d
+PRIORITY_TH_PRESENCEUSER	global.h	41;"	d
+PRIORITY_TH_ENVOYER	global.h	42;"	d
+PRIORITY_TH_ARRET_URGENCE	global.h	43;"	d
+PRIORITY_TH_COMMUNICATION_ANDROID	global.h	44;"	d
+arret	global.h	/^extern int arret;$/;"	x
+status	global.h	/^extern int status;$/;"	x
+etat_com	global.h	/^extern int etat_com;$/;"	x
+etat_reception	global.h	/^extern int etat_reception;$/;"	x
+presence_user	global.h	/^extern int presence_user;$/;"	x
+c	global.h	/^extern int c;$/;"	x
+android	global.h	/^extern int android;$/;"	x
+label	global.h	/^	char label;$/;"	m	struct:__anon3
+fval	global.h	/^	float fval;$/;"	m	struct:__anon3
+ival	global.h	/^	int ival;$/;"	m	struct:__anon3
+message_stm	global.h	/^} message_stm;$/;"	t	typeref:struct:__anon3
+etat_angle	global.h	/^extern Angles etat_angle;$/;"	x
+batterie	global.h	/^extern Battery batterie;$/;"	x
+consigne_couple	global.h	/^extern Consigne consigne_couple;$/;"	x
+vitesse_lin	global.h	/^extern Vitesse vitesse_lin;$/;"	x
+var_mutex_vitesse	global.h	/^extern RT_MUTEX var_mutex_vitesse; $/;"	x
+var_mutex_etat_com	global.h	/^extern RT_MUTEX var_mutex_etat_com; $/;"	x
+var_mutex_etat_angle	global.h	/^extern RT_MUTEX var_mutex_etat_angle;$/;"	x
+var_mutex_consigne_couple	global.h	/^extern RT_MUTEX var_mutex_consigne_couple;$/;"	x
+var_mutex_status	global.h	/^extern RT_MUTEX var_mutex_status;$/;"	x
+var_mutex_batterie	global.h	/^extern RT_MUTEX var_mutex_batterie;$/;"	x
+var_mutex_presence_user	global.h	/^extern RT_MUTEX var_mutex_presence_user ;$/;"	x
+var_mutex_etat_reception	global.h	/^extern RT_MUTEX var_mutex_etat_reception;$/;"	x
+var_mutex_arret	global.h	/^extern RT_MUTEX var_mutex_arret ;$/;"	x
+var_sem_arret	global.h	/^extern RT_SEM var_sem_arret;$/;"	x
+var_sem_envoyer	global.h	/^extern RT_SEM var_sem_envoyer;$/;"	x
+queue_Msg2STM	global.h	/^extern RT_QUEUE queue_Msg2STM;$/;"	x
+th_Communication	global.h	/^extern RT_TASK th_Communication;$/;"	x
+th_Asservissement	global.h	/^extern RT_TASK th_Asservissement;$/;"	x
+th_Affichage	global.h	/^extern RT_TASK th_Affichage; $/;"	x
+th_Surveillance_Batterie	global.h	/^extern RT_TASK th_Surveillance_Batterie; $/;"	x
+th_Envoyer	global.h	/^extern RT_TASK th_Envoyer; $/;"	x
+th_Presence_User	global.h	/^extern RT_TASK th_Presence_User; $/;"	x
+th_Arret_Urgence	global.h	/^extern RT_TASK th_Arret_Urgence; $/;"	x
+th_Communication_Android	global.h	/^extern RT_TASK th_Communication_Android;$/;"	x
+info_float_new	global.h	/^info_float info_float_new(char lab, float dat);$/;"	p
+info_int_new	global.h	/^info_int info_int_new(char lab, int dat);$/;"	p
+INCLUDES_H	includes.h	11;"	d
+initStruct	main.cpp	/^void initStruct(void);$/;"	p	file:
+startTasks	main.cpp	/^void startTasks(void);$/;"	p	file:
+deleteTasks	main.cpp	/^void deleteTasks(void);$/;"	p	file:
+main	main.cpp	/^int main(void){$/;"	f
+initStruct	main.cpp	/^void initStruct(void) {$/;"	f
+startTasks	main.cpp	/^void startTasks() {$/;"	f
+deleteTasks	main.cpp	/^void deleteTasks() {$/;"	f
