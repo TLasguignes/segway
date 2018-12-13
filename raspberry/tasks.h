@@ -97,6 +97,12 @@ public:
     void TaskStm32Reception(void * arg);
     
     /**
+     * Task use for emission of data from STM32
+     * @param arg In the case of a member of a class, this parameter holds a reference to surrounding object (this, normaly)
+     */
+    void TaskStm32Emission(void * arg);
+    
+    /**
      * Task use to send data to user interface (through server)
      * @param arg In the case of a member of a class, this parameter holds a reference to surrounding object (this, normaly)
      */
@@ -117,7 +123,7 @@ private:
     /**
      * Semaphore for synchronizing message sent to user interface
      */
-    RT_SEM semSendGui;
+    RT_SEM semDummy;
 
     /**
      * Message queue used for message communication between taskStm32Handler and taskSystemControlHandler
@@ -127,7 +133,12 @@ private:
     /**
      * Task handler of TaskStm32Reception
      */
-    RT_TASK taskStm32Handler;
+    RT_TASK taskStm32ReceptionHandler;
+    
+    /**
+     * Task handler of TaskStm32Emission
+     */
+    RT_TASK taskStm32EmissionHandler;
     
     /**
      * Task handler of TaskSystemControl

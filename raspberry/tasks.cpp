@@ -15,7 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/*
+ * Some remarks:
+ * 1- This program is mostly a template. It shows you how to create tasks, semaphore
+ *   message queues, mutex ... and how to use them
+ * 
+ * 2- semDumber is, as name say, useless. Its goal is only to show you how to use semaphore
+ * 
+ * 3- Data flow is probably not optimal
+ * 
+ * 4- Take into account that ComStm32::Write will block your task when serial buffer is full,
+ *   time for internal buffer to flush
+ * 
+ * 5- Same behavior existe for ComGui::Write !
+ * 
+ * 6- When you want to write something in terminal, use cout and terminate with endl and flush
+ * 
+ * 7- Good luck !
+ */
 
 #include <iostream>
 
@@ -29,15 +46,11 @@
  * @brief priority level for tasks
  */
 #define PRIORITY_TH_COMMUNICATION 50
-#define PRIORITY_TH_ASSERVISSEMENT 81
-#define PRIORITY_TH_AFFICHAGE 70
-#define PRIORITY_TH_BATTERIE 73
-#define PRIORITY_TH_PRESENCEUSER 75
-#define PRIORITY_TH_ENVOYER 90
-#define PRIORITY_TH_ARRET_URGENCE 95
+#define PRIORITY_TH_ASSERVISSEMENT 70
+#define PRIORITY_TH_AFFICHAGE 90
 
 /**
- * @brief Server port: can be changed, in case of trouble (port already used=
+ * @brief Server port: can be changed, in case of trouble (port already used)
  */
 #define SERVER_PORT 2345
 
@@ -51,6 +64,9 @@ using namespace std;
 void Tasks::Init() {
     int err;
     int status;
+    Message *msg;
+
+    int size;
 
     /**************************************************************************************/
     /* 	Mutex creation                                                                    */
@@ -65,7 +81,7 @@ void Tasks::Init() {
     /**************************************************************************************/
     /* 	Semaphors creation       							  */
     /**************************************************************************************/
-    if (err = rt_sem_create(&semSendGui, "semSendGui", 0, TM_INFINITE))
+    if (err = rt_sem_create(&semDummy, "semSendGui", 0, TM_INFINITE))
         throw std::runtime_error {
         "Error creating semSendGui " + string(strerror(-err))
     };
@@ -75,9 +91,9 @@ void Tasks::Init() {
     /**************************************************************************************/
     /* Tasks creation                                                                     */
     /**************************************************************************************/
-    if (err = rt_task_create(&taskStm32Handler, "taskStm32", 0, PRIORITY_TH_COMMUNICATION, 0))
+    if (err = rt_task_create(&taskStm32ReceptionHandler, "taskStm32Reception", 0, PRIORITY_TH_COMMUNICATION, 0))
         throw std::runtime_error {
-        "Error creating taskStm32 " + string(strerror(-err))
+        "Error creating taskStm32Reception " + string(strerror(-err))
     };
 
     if (err = rt_task_create(&taskSystemControlHandler, "taskSystemControlHandler", 0, PRIORITY_TH_ASSERVISSEMENT, 0))
@@ -142,14 +158,19 @@ void Tasks::Init() {
 void Tasks::StartTasks() {
     int err;
 
-    if (err = rt_task_start(&taskStm32Handler, (void (*)(void*)) & Tasks::TaskStm32Reception, this))
-        throw std::runtime_error {
-        "Error when starting taskStm32 : " + string(strerror(-err))
-    };
-
     if (err = rt_task_start(&taskGuiHandler, (void (*)(void*)) & Tasks::TaskGui, this))
         throw std::runtime_error {
-        "Error when starting taskStm32 : " + string(strerror(-err))
+        "Error when starting TaskGui : " + string(strerror(-err))
+    };
+
+    if (err = rt_task_start(&taskSystemControlHandler, (void (*)(void*)) & Tasks::TaskSystemControl, this))
+        throw std::runtime_error {
+        "Error when starting TaskSystemControl : " + string(strerror(-err))
+    };
+    
+    if (err = rt_task_start(&taskStm32ReceptionHandler, (void (*)(void*)) & Tasks::TaskStm32Reception, this))
+        throw std::runtime_error {
+        "Error when starting TaskStm32Reception : " + string(strerror(-err))
     };
 }
 
@@ -157,8 +178,9 @@ void Tasks::StartTasks() {
  * Clean destruction of tasks, realtime system stops here
  */
 void Tasks::DeleteTasks() {
+    rt_task_delete(&this->taskStm32ReceptionHandler);
     rt_task_delete(&this->taskGuiHandler);
-    rt_task_delete(&this->taskStm32Handler);
+    rt_task_delete(&this->taskSystemControlHandler);
 }
 
 /**
@@ -212,13 +234,32 @@ void Tasks::UpdateParameters(Message *msg) {
  */
 void Tasks::TaskStm32Reception(void *arg) {
     Message *msg;
+    int err = 0;
 
-    cout << "Start ComSTM32Task task" << endl;
+    cout << "Start TaskStm32Reception task" << endl;
 
     while (1) {
         //Read incoming command from stm32
         msg = this->comStm32->Read();
-        this->UpdateParameters(msg);
+        
+        cout << "Write in queue" <<endl <<flush;
+        err = rt_queue_write(&this->queueFromStm32, &msg, sizeof (msg), Q_FIFO);
+
+        if (err < 0) {
+            switch (err) {
+                case (-ENOMEM):
+                    cout <<"queueFromStm32 error limit exceeded " <<err <<endl <<flush;
+                    break;
+                case (-EINVAL):
+                    cout <<"queueFromStm32 error: first argument is not a message queue descriptor or invalid mode or buf is NULL: "<< err<<endl <<flush;
+                    break;
+                default:
+                    cout <<"Unknown error: "<< err<<endl <<flush;
+                    break;
+            }
+            
+            throw std::runtime_error{"Error write queue"};
+        }
     }
 }
 
@@ -228,34 +269,20 @@ void Tasks::TaskStm32Reception(void *arg) {
  */
 void Tasks::TaskGui(void *arg) {
     Message *msg;
-    float torque;
 
-    cout << "Start GUITask task" << endl;
+    cout << "Start TaskGui task" << endl;
 
     rt_task_set_periodic(NULL, TM_NOW, 10000000);
 
     while (1) {
         rt_task_wait_period(NULL);
-
-        if ((this->parameters->UserPresence() == false) || (this->parameters->Battery() < 10.0)) {
-            if (this->parameters->EmergencyStop() == false) cout << "Raise emergency signal" << endl;
-            this->parameters->SetEmergencyStop(true);
-
-            msg = new MessageBool(MESSAGE_EMERGENCY_STOP, this->parameters->EmergencyStop());
-            this->comStm32->Write(msg);
-
-            torque = 0.0;
-        } else {
-            if (this->parameters->EmergencyStop() == true) cout << "Drop emergency signal" << endl;
-
-            this->parameters->SetEmergencyStop(false);
-            torque = Control::ComputeTorque(this->parameters->AngularPosition(), this->parameters->AngularSpeed());
-        }
-
-        this->parameters->SetTorque(torque);
-        msg = new MessageFloat(MESSAGE_TORQUE, this->parameters->Torque());
-        this->comStm32->Write(msg);
-
+        cout << "TaskGui: new periodic activation" << endl<<flush;
+        
+        // Pend on semaphore (just to see how to pend on semaphore)
+        cout << "Pend on semaphore" << endl<<flush;
+        rt_sem_v(&this->semDummy);
+        
+        cout << "Send data to GUI" << endl<<flush;
         this->comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, this->parameters->AngularPosition()));
         this->comGui->Write(new MessageFloat(MESSAGE_BATTERY, this->parameters->Battery()));
         this->comGui->Write(new MessageFloat(MESSAGE_BETA, this->parameters->Beta()));
@@ -264,6 +291,8 @@ void Tasks::TaskGui(void *arg) {
         this->comGui->Write(new MessageFloat(MESSAGE_ANGULAR_SPEED, this->parameters->AngularSpeed()));
         this->comGui->Write(new MessageFloat(MESSAGE_LINEAR_SPEED, this->parameters->LinearSpeed()));
         this->comGui->Write(new MessageBool(MESSAGE_EMERGENCY_STOP, this->parameters->EmergencyStop()));
+        
+        cout << "Send done" << endl<<flush;
     }
 }
 
@@ -271,6 +300,26 @@ void Tasks::TaskGui(void *arg) {
  * Task use to process control loop
  * @param arg In the case of a member of a class, this parameter holds a reference to surrounding object (this, normaly)
  */
-void TaskSystemControl(void * arg) {
+void Tasks::TaskSystemControl(void * arg) {
+    Message *msgEmergency;
+    Message *msgTorque;
+    Message *msg;
+    
+    float torque;
+    int err;
+   
+    cout << "Start TaskSystemControl task" << endl;
 
+    while (1) {
+        cout << "Read from queue" << endl<<flush;
+        err = rt_queue_read(&this->queueFromStm32, &msg, sizeof (msg), Q_UNLIMITED);
+        if (err < 0) throw std::runtime_error {"Error read queue"};
+        cout << "Queue read !" << endl<<flush;
+        
+        this->UpdateParameters(msg);
+        
+        cout << "Produce semaphore" << endl<<flush;
+        rt_sem_v(&this->semDummy);
+        cout << "Semaphore produced ! " << endl<<flush;
+    }
 }

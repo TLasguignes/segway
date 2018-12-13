@@ -158,14 +158,14 @@ namespace SegwayUI
                 {
                     data = stream.ReadByte();
                 }
-                catch (ObjectDisposedException e)
+                catch (ObjectDisposedException)
                 {
-                    Console.WriteLine("Connection to server dropped: " + e.ToString());
+                    Console.WriteLine("Connection to server dropped (object disposed)!");
                     return;
                 }
-                catch (System.IO.IOException e)
+                catch (System.IO.IOException)
                 {
-                    Console.WriteLine("Connection to server dropped: " + e.ToString());
+                    Console.WriteLine("Connection to server dropped (other error)");
                     return;
                 }
 
