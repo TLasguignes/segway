@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Segway@INSA
 Here is software part of INSA'segway project. Repository contains following directories:
 
@@ -13,4 +14,9 @@ Here is software part of INSA'segway project. Repository contains following dire
 * stm32:
   Contains two flavors of code for STM32 board: one with complete feature, to use on real segway, the other striped down for simulator uses
 
+=======
+Vous etes sur la branche "master", qui est une branche vide.
+
+Vous devez selectionner la branche "stable" pour votre travail en TP.
+>>>>>>> ca62f968bc445254e95da41f9507acc54685e03a
 
