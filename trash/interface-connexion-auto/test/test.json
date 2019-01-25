@@ -1,8 +1,0 @@
-{
-    "arret_urgence":false,
-    "presence_user":true,
-    "position_angulaire":0,
-    "vitesse_angulaire": 100,
-    "vitesse_lineaire": 50,
-    "battery": 90
-}
