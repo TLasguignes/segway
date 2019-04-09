@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{15AC9E3C-4404-4D1B-A2D9-C27D198BDD83}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SegwayUI</RootNamespace>
+    <AssemblyName>SegwayUI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="libstetic">
+      <HintPath>..\..\..\..\..\..\..\..\app\lib\monodevelop\AddIns\MonoDevelop.GtkCore\libstetic.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cairo" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ressources\segway.resized.png" />
+    <EmbeddedResource Include="ressources\disconnected.png" />
+    <EmbeddedResource Include="ressources\battery100.png" />
+    <EmbeddedResource Include="ressources\battery75.png" />
+    <EmbeddedResource Include="ressources\battery50.png" />
+    <EmbeddedResource Include="ressources\battery25.png" />
+    <EmbeddedResource Include="ressources\battery0.png" />
+    <EmbeddedResource Include="ressources\batteryInvalid.png" />
+    <EmbeddedResource Include="ressources\userNotPresent.png" />
+    <EmbeddedResource Include="ressources\userPresent.png" />
+    <EmbeddedResource Include="ressources\emergency-invalid.png" />
+    <EmbeddedResource Include="ressources\emergency-off.png" />
+    <EmbeddedResource Include="ressources\emergency-on.png" />
+    <EmbeddedResource Include="ressources\connected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="gtk-gui\MainWindow.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JaugeWidget.cs" />
+    <Compile Include="BatteryWidget.cs" />
+    <Compile Include="MessageLog.cs" />
+    <Compile Include="gtk-gui\SegwayUI.MessageLog.cs" />
+    <Compile Include="UserWidget.cs" />
+    <Compile Include="GlobalVariables.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="CommandManager.cs" />
+    <Compile Include="SegwayManager.cs" />
+    <Compile Include="EmergencyWidget.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

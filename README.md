@@ -1,4 +1,16 @@
-Vous etes sur la branche "master", qui est une branche vide.
+# Segway@INSA
+Here is software part of INSA'segway project. Repository contains following directories:
 
-Vous devez selectionner la branche "stable" pour votre travail en TP.
+* docs:
+  Technical documentations but also practical works for students
+
+* monitor:
+  User interface, written in C#
+
+* raspberry:
+  Control software running on raspberry, using Xenomai libraries. Must be written by students (main part of hands-on workshop)
+
+* stm32:
+  Contains two flavors of code for STM32 board: one with complete feature, to use on real segway, the other striped down for simulator uses
+
 
