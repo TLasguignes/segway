@@ -1,0 +1,111 @@
+EESchema Schematic File Version 4
+LIBS:support_interrupteur-cache
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Support_Interrupteur"
+Date "2019-09-11"
+Rev "1.0"
+Comp "Toulouse"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_SPDT SW1
+U 1 1 5D7AE2F4
+P 5650 3150
+F 0 "SW1" H 5650 3343 50  0000 C CNN
+F 1 "SW_SPDT" H 5650 3344 50  0001 C CNN
+F 2 "A101SYCQ04:TE_A101SYCQ04" H 5650 3150 50  0001 C CNN
+F 3 "~" H 5650 3150 50  0001 C CNN
+	1    5650 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L insa-sym:LOGO #G1
+U 1 1 5D7AE811
+P 7600 6800
+F 0 "#G1" H 7600 6348 60  0001 C CNN
+F 1 "LOGO" H 7600 7252 60  0001 C CNN
+F 2 "" H 7600 6800 50  0001 C CNN
+F 3 "" H 7600 6800 50  0001 C CNN
+	1    7600 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Graphic:Logo_Open_Hardware_Small #LOGO1
+U 1 1 5D7AFC65
+P 10900 6850
+F 0 "#LOGO1" H 10900 7125 50  0001 C CNN
+F 1 "Logo_Open_Hardware_Small" H 10900 6625 50  0001 C CNN
+F 2 "" H 10900 6850 50  0001 C CNN
+F 3 "~" H 10900 6850 50  0001 C CNN
+	1    10900 6850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J1
+U 1 1 5D7B04ED
+P 7300 3150
+F 0 "J1" H 7380 3146 50  0000 L CNN
+F 1 "Conn_01x03" H 7380 3101 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 7300 3150 50  0001 C CNN
+F 3 "~" H 7300 3150 50  0001 C CNN
+	1    7300 3150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 3050 7100 3050
+Wire Wire Line
+	5850 3250 7100 3250
+Wire Wire Line
+	5450 3150 5450 2650
+Wire Wire Line
+	5450 2650 6800 2650
+Wire Wire Line
+	6800 2650 6800 3150
+Wire Wire Line
+	6800 3150 7100 3150
+Wire Wire Line
+	6800 3150 6800 3400
+Connection ~ 6800 3150
+$Comp
+L power:GND #PWR?
+U 1 1 5D791437
+P 6800 3400
+F 0 "#PWR?" H 6800 3150 50  0001 C CNN
+F 1 "GND" H 6805 3227 50  0000 C CNN
+F 2 "" H 6800 3400 50  0001 C CNN
+F 3 "" H 6800 3400 50  0001 C CNN
+	1    6800 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D7917FB
+P 7950 3150
+F 0 "#PWR?" H 7950 2900 50  0001 C CNN
+F 1 "GND" H 7955 2977 50  0000 C CNN
+F 2 "" H 7950 3150 50  0001 C CNN
+F 3 "" H 7950 3150 50  0001 C CNN
+	1    7950 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 5D791E6F
+P 7950 3050
+F 0 "#FLG?" H 7950 3125 50  0001 C CNN
+F 1 "PWR_FLAG" H 7950 3223 50  0000 C CNN
+F 2 "" H 7950 3050 50  0001 C CNN
+F 3 "~" H 7950 3050 50  0001 C CNN
+	1    7950 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7950 3050 7950 3150
+$EndSCHEMATC
