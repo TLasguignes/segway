@@ -70,10 +70,12 @@ void Acc_read(float* pfData)
     cDivider=64;
   else
     cDivider=16;
-    for(i=0; i<3; i++)
-    {
-      pnRawData[i]=((int16_t)((uint16_t)buffer[2*i+1] << 8) + buffer[2*i])/cDivider;
-    }
+
+  for(i=0; i<3; i++)
+  {
+	pnRawData[i]=((int16_t)((uint16_t)buffer[2*i+1] << 8) + buffer[2*i])/cDivider;
+  }
+
   /* Read the register content */
   LSM303DLHC_Read(ACC_I2C_ADDRESS, LSM303DLHC_CTRL_REG4_A, ctrlx,2);
 

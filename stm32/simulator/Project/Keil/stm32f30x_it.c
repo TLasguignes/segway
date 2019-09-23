@@ -31,7 +31,7 @@
 #include "stm32f30x_it.h"
 #include "main.h"
 //#include "usb_istr.h"
-#include "fonctions.h"
+#include "Fonctions.h"
 /** @addtogroup STM32F3-Discovery_Demo
   * @{
   */
@@ -158,7 +158,7 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  Interruption déclenché par bouton bleue de changement de mode 
+  * @brief  Interruption dï¿½clenchï¿½ par bouton bleue de changement de mode 
   * @param  None
   * @retval None
   */
@@ -177,7 +177,7 @@ void EXTI0_IRQHandler(void)
 }
 
 /**
-  * @brief  Interruption déclenché par Accelerometre à 94 HZ (Interruption Principale de système)
+  * @brief  Interruption dï¿½clenchï¿½ par Accelerometre ï¿½ 94 HZ (Interruption Principale de systï¿½me)
   * @param  None
   * @retval None
   */
@@ -188,7 +188,7 @@ void EXTI1_IRQHandler(void)
 	/** 
 	 * Dectection de perde de connexion de USART
 	 * La surveillance de connexion avec raspberry pi par usart (detection de reception)
-	 * Si on ne reçoit pas de données de Raspberry Pi plus de 500ms, le LED clignote et le consigne_new =0
+	 * Si on ne reï¿½oit pas de donnï¿½es de Raspberry Pi plus de 500ms, le LED clignote et le consigne_new =0
 	 */
 	watchdog++;
 	if (watchdog >= 50){
@@ -198,7 +198,7 @@ void EXTI1_IRQHandler(void)
 		Consigne = 0.0;
 	}	
 	
-	// Lecture de donnée et remplir buffer envoyer, puis envoyer de donnée 
+	// Lecture de donnï¿½e et remplir buffer envoyer, puis envoyer de donnï¿½e 
 	Trait_Gyro_Acc ();
 	
 	// Sortir de boucle lorque l'envoie est fini
@@ -239,9 +239,9 @@ void DMA1_Channel1_IRQHandler (void)
   */
 void USART2_IRQHandler  (void)
 {
-  static int rx_index = 0;		// variable intern pour index de trame reçu
+  static int rx_index = 0;		// variable intern pour index de trame reï¿½u
  	unsigned char tampon = 0; 	// variable temporaire pour tester le premier caractere de trame 
-	float value;								// variable temporaire pour valeur de donnée de trame
+	float value;								// variable temporaire pour valeur de donnï¿½e de trame
 	
 	STM_EVAL_LEDToggle(LED5);
 
@@ -251,8 +251,8 @@ void USART2_IRQHandler  (void)
 		watchdog = 0;
 		
 		/* Detection de trame complet de Raspberry Pi
-			- On interprète le caratère de trame pour indentifier le debut de trame
-			- Si c'est bien le début, on le prend et le stocker dans un buffer
+			- On interprï¿½te le caratï¿½re de trame pour indentifier le debut de trame
+			- Si c'est bien le dï¿½but, on le prend et le stocker dans un buffer
 		*/
 		if (tampon == '<'){
 			rx_index = 1;
@@ -269,7 +269,7 @@ void USART2_IRQHandler  (void)
 			if (RX_USART[0] == '<'&& RX_USART[6] == '\n') 
 			{
 				value=bytes_to_float(&RX_USART[2]);	
-				// interpretation de type de donnée dans le trame par label de trame
+				// interpretation de type de donnï¿½e dans le trame par label de trame
 				switch (RX_USART[1]){
 						//cas de reception de trame de consigne 
 						case 'c' : Consigne=value;

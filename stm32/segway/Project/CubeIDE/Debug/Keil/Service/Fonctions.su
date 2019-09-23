@@ -1,0 +1,7 @@
+Fonctions.c:117:6:Trait_Gyro_Acc	24	static
+Fonctions.c:250:6:Trait_b_courant	16	static
+Fonctions.c:427:6:Trait_consigne	16	static
+Fonctions.c:450:6:Delay	16	static
+Fonctions.c:461:6:TimingDelay_Decrement	4	static
+Fonctions.c:474:17:bintoascii	16	static
+Fonctions.c:496:7:bytes_to_float	24	static

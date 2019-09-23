@@ -13,7 +13,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f30x_it.h"
 #include "main.h"
-#include "fonctions.h"
+#include "Fonctions.h"
 /** @addtogroup STM32F3-Discovery_Demo
   * @{
   */
@@ -29,11 +29,11 @@ __IO uint32_t VAR_ADC12_IN6 , VAR_ADC12_IN7 , VAR_ADC12_IN8 , VAR_ADC12_IN9,VAR_
 //variable pour surveillance de connexion avec raspberry pi par usart (detection de reception)
 int watchdog;
 
-// variable pour detection de même consigne de raspberry pi 
+// variable pour detection de mï¿½me consigne de raspberry pi 
 float old_cons;
 int cmpt_egal = 0;
 
-//	variable de l'état arrêt urgence declecnhé par Raspberry Pi 
+//	variable de l'ï¿½tat arrï¿½t urgence declecnhï¿½ par Raspberry Pi 
 int arret = 1;
 
 
@@ -148,7 +148,7 @@ void SysTick_Handler(void)
 
 
 /**
-  * @brief  Interruption déclenché par Accelerometre à 94 HZ (Interruption Principale de système)
+  * @brief  Interruption dï¿½clenchï¿½ par Accelerometre ï¿½ 94 HZ (Interruption Principale de systï¿½me)
   * @param  None
   * @retval None
   */
@@ -157,7 +157,7 @@ void EXTI1_IRQHandler(void)
 	/** 
 	 * Dectection de perde de connexion de USART
 	 * La surveillance de connexion avec raspberry pi par usart (detection de reception)
-	 * Si on ne reçoit pas de données de Raspberry Pi plus de 500ms, le LED clignote et le consigne_new =0
+	 * Si on ne reï¿½oit pas de donnï¿½es de Raspberry Pi plus de 500ms, le LED clignote et le consigne_new =0
 	 */
 	watchdog++;
 	if (watchdog >= 50){
@@ -167,7 +167,7 @@ void EXTI1_IRQHandler(void)
 		Consigne2 = 0.0f;
 	}	
 	
-	// Lecture de donnée et remplir buffer envoyer, puis envoyer de donnée 
+	// Lecture de donnï¿½e et remplir buffer envoyer, puis envoyer de donnï¿½e 
 	Trait_Gyro_Acc ();
 	
 	// Sortir de boucle lorque l'envoie est fini
@@ -178,7 +178,7 @@ void EXTI1_IRQHandler(void)
 
 
 /**
-  * @brief  Interruption par DMA de ADC, le boucle de courant est fait ici également 
+  * @brief  Interruption par DMA de ADC, le boucle de courant est fait ici ï¿½galement 
   * @param  None
   * @retval None
   */
@@ -215,8 +215,8 @@ void DMA1_Channel1_IRQHandler (void)
 			VAR_ADC1_IN5  = 0;
 	    STM_EVAL_LEDToggle(LED9);
 		
-			if (ConfigOK==1){ 								//	une fois la configuration du système est fait
-				Trait_b_courant();							//	execution boucle de courant une fois ADC a trouvé la valeur moyenne de courant
+			if (ConfigOK==1){ 								//	une fois la configuration du systï¿½me est fait
+				Trait_b_courant();							//	execution boucle de courant une fois ADC a trouvï¿½ la valeur moyenne de courant
 			}
 		}
 		DMA_ClearITPendingBit(DMA1_IT_TC1);			
@@ -230,9 +230,9 @@ void DMA1_Channel1_IRQHandler (void)
   */
 void USART2_IRQHandler  (void)
 {
-  static int rx_index = 0;		// variable intern pour index de trame reçu
+  static int rx_index = 0;		// variable intern pour index de trame reï¿½u
  	unsigned char tampon = 0; 	// variable temporaire pour tester le premier caractere de trame 
-	float value;								// variable temporaire pour valeur de donnée de trame
+	float value;								// variable temporaire pour valeur de donnï¿½e de trame
 	
 	STM_EVAL_LEDToggle(LED4);
 
@@ -240,11 +240,11 @@ void USART2_IRQHandler  (void)
   { 
 		tampon = USART_ReceiveData(USART2);
 		watchdog = 0;																					
-		// Remis le watchdog à 0 car il y a encore communication de USART 
+		// Remis le watchdog ï¿½ 0 car il y a encore communication de USART 
 		
 		/* Detection de trame complet de Raspberry Pi
-				- On interprète le caratère de trame pour indentifier le debut de trame
-				- Si c'est bien le début, on le prend et le stocker dans un buffer
+				- On interprï¿½te le caratï¿½re de trame pour indentifier le debut de trame
+				- Si c'est bien le dï¿½but, on le prend et le stocker dans un buffer
 		*/
 		if (tampon == '<'){
 			rx_index = 1;
@@ -261,12 +261,12 @@ void USART2_IRQHandler  (void)
 			if (RX_USART[0] == '<'&& RX_USART[6] == '\n') 
 			{
 				value=bytes_to_float(&RX_USART[2]);	
-				// interpretation de type de donnée dans le trame par label de trame
+				// interpretation de type de donnï¿½e dans le trame par label de trame
 				switch (RX_USART[1]){
 					//cas de reception de trame de consigne 
 					case 'c' : 	Consigne_OK=1;
 											Consigne_new=value/0.80435f;
-											// detection si le consigne ancien est le même 
+											// detection si le consigne ancien est le mï¿½me 
 											// precaution de erreur de communication 
 											if(old_cons == Consigne_new){
 												cmpt_egal++;

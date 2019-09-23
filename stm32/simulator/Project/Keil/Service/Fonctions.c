@@ -4,7 +4,7 @@
   * @author  INSA Toulouse
   * @version V1.0 
   * @date    13-Juin-2017 
-  * @brief   Fonctions utilisé pour interruptions
+  * @brief   Fonctions utilisï¿½ pour interruptions
   ******************************************************************************
 */
 
@@ -23,8 +23,8 @@ __IO uint16_t MOY_ADC12_IN8 = 0, MOY_ADC12_IN9 =0;
 float ZeroACCX = 0.0f;														// variable de zero accelero X
 float Zerogyro = 0.0f;														// variable de zero du gyro
 float Angleacc = 0.0f;														// variable de l'angle a partir de tangente inverse
-float Anglegyro = 0.0f;														// variable de l'angle a partir de d °/seconde
-float Anglemesure = 0.0f;													// variable de l'angle fusionné
+float Anglegyro = 0.0f;														// variable de l'angle a partir de d ï¿½/seconde
+float Anglemesure = 0.0f;													// variable de l'angle fusionnï¿½
 float VitesseAngle = 0.0f;												// variable de la vitesse angulaire
 float AccBuffer[3] = {0.0f}, Buffer[3] = {0.0f};	// tableau pour lecture de valeurs par gyroscope et accelerometre
 
@@ -39,8 +39,8 @@ __IO uint32_t TimingDelay = 0 ;										// variable pour fonction delay
 float Consigne=0.0;																//	Consigne de courant de Raspberry Pi
 
 //Variable pour fonction de arret trigger par Raspberry Pi
-int cmpt_arr = 0 ;																//	variable de compteur pour reinitialiser état de arret de système 
-int arret = 0;																		//	variable de l'état arrêt urgence declecnhé par Raspberry Pi 
+int cmpt_arr = 0 ;																//	variable de compteur pour reinitialiser ï¿½tat de arret de systï¿½me 
+int arret = 0;																		//	variable de l'ï¿½tat arrï¿½t urgence declecnhï¿½ par Raspberry Pi 
 
 // Variable pour mode entree angle beta 
 int usage_acc= 1;
@@ -50,13 +50,13 @@ int no_user = 0;
 int presence_snd = 1;
 
 // Variable pour matrice de fonction transfer
-float A[2][2] = {1.003f, 0.02002f,0.3166f, 1.003f};
-float B[2][2] = {-0.0002483f, 0.00312f, -0.02485f, 0.3122f};
+float A[2][2] = {{1.003f, 0.02002f},{0.3166f, 1.003f}};
+float B[2][2] = {{-0.0002483f, 0.00312f}, {-0.02485f, 0.3122f}};
 float x_k[2] = {0,0};
 float u_k[2] = {0,0};
 
 /**
-  * @brief  Traitement données de Gyro, Accelero et ADC
+  * @brief  Traitement donnï¿½es de Gyro, Accelero et ADC
   * @param   
   * @retval  
   */
@@ -73,12 +73,12 @@ void Trait_Gyro_Acc (void) {
 	
 	Acc_read(AccBuffer);
 	AccBuffer[0] = AccBuffer[0] + ZeroACCX;	
-	AccBuffer[2] = ABS (AccBuffer[2]);// Acceleration z ne peut etre négative sur gyropode phase change de signe 
+	AccBuffer[2] = ABS (AccBuffer[2]);// Acceleration z ne peut etre nï¿½gative sur gyropode phase change de signe 
  	Angleacc  =-atan (AccBuffer[0]/AccBuffer[2])*180/PI ;// - atan( AccX/AccZ)X 180/PI
 	Anglemesure	= 0.98f *(Anglemesure	+	(Deltatps * (Zerogyro+Buffer[0])))	+0.02f*Angleacc;//0.98 + 0.02 = 1
 	VitesseAngle = (Zerogyro+Buffer[0]);// vitesse angulaire
 
-	// Lecture du PA4 : présence user
+	// Lecture du PA4 : prï¿½sence user
 	if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_4)){
 		presence_snd = 0;
 		STM_EVAL_LEDOff(LED6);}
@@ -88,9 +88,9 @@ void Trait_Gyro_Acc (void) {
 	}
 	
 	/* 
-		* Remis de l'état arret urgence 
+		* Remis de l'ï¿½tat arret urgence 
 		*	La detection de arret urgence est fait dans interruption de USART reception	
-		* Si STM ne reçoit pas de trame arrêt pendant 3 secondes (300 itération car frenquence de envoie de trame par RPI = 100Hz)
+		* Si STM ne reï¿½oit pas de trame arrï¿½t pendant 3 secondes (300 itï¿½ration car frenquence de envoie de trame par RPI = 100Hz)
 		* Reinitialise the etat de arret 
 	*/
 	if(cmpt_arr>300){
@@ -127,7 +127,7 @@ void Trait_Gyro_Acc (void) {
 	x_k[0] = xk0;
 	x_k[1] = xk1;
 	
-	/* Envoie de donnée par USART dans le forme suivante*/
+	/* Envoie de donnï¿½e par USART dans le forme suivante*/
 
 	tampon_float = x_k[0]; 								//en radians 
 	tampon_char=(unsigned char*)&tampon_float;
@@ -187,7 +187,7 @@ void Trait_Gyro_Acc (void) {
 	DMA_SetCurrDataCounter(DMA1_Channel7, sizeof(TX_USART));	//	Mise au depart pointeur sur Buffer en arret DMA
 	DMA_Cmd(DMA1_Channel7, ENABLE);
 
-	//	Limitation de 180.0 deg à -180.0 deg
+	//	Limitation de 180.0 deg ï¿½ -180.0 deg
 	if(x_k[0] > 1.57f || x_k[0] < -1.57f) {
 		Consigne=0;
     x_k[0] = 0;
@@ -229,13 +229,13 @@ void TimingDelay_Decrement(void)
 unsigned char * bintoascii(uint16_t data_bin)
 {
 	*(chain_ascii + 5)     = 0;
-	*(chain_ascii + 4) = 0x30 + data_bin %10 ;// unité
+	*(chain_ascii + 4) = 0x30 + data_bin %10 ;// unitï¿½
 	data_bin /= 10;
   *(chain_ascii + 3) = 0x30 + data_bin %10 ;// dizaine
 	data_bin /= 10;
   *(chain_ascii + 2) = 0x30 + data_bin %10 ;// centaine
 	data_bin /= 10;
-  *(chain_ascii + 1) = 0x30 + data_bin %10 ;// unité de 1000
+  *(chain_ascii + 1) = 0x30 + data_bin %10 ;// unitï¿½ de 1000
 	data_bin /= 10;
   *(chain_ascii)     = 0x30 + data_bin %10 ;// 10 aine de 1000
 
@@ -243,7 +243,7 @@ unsigned char * bintoascii(uint16_t data_bin)
 }
 
 /**
-  * @brief  Fonction de convetir en bytes à float (pour reception de donnée)
+  * @brief  Fonction de convetir en bytes ï¿½ float (pour reception de donnï¿½e)
   * @param  None
   * @retval None
   */

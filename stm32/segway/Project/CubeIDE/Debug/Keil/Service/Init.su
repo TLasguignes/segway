@@ -1,0 +1,7 @@
+Init.c:40:6:Init_shutdown	8	static
+Init.c:57:6:Init_IT_EXT	32	static
+Init.c:96:6:Init_IT_DMA1	16	static
+Init.c:111:6:Init_Bouton	8	static
+Init.c:123:6:Init_ADC1_DMA1	8	static
+Init.c:231:6:Init_USART	16	static
+Init.c:289:6:TIM_Config	8	static
