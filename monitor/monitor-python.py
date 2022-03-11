@@ -10,8 +10,9 @@ from  queue import Queue
 import time
 import sys
 
+import math 
+
 import argparse
-from unittest.mock import DEFAULT
 
 from locale import atof, setlocale, LC_NUMERIC
 
@@ -199,35 +200,90 @@ class Network():
         else:
             return self.ANSWER_ACK
 
+def progressBar(currentWindow, posy, posx, length, value, maxvalue):
+    localvalue=value
+    if localvalue<0.0:
+        localvalue=0.0
+    
+    if localvalue>maxvalue:
+        localvalue=maxvalue
+        
+    for i in range(0,int(localvalue*float(length)/maxvalue),1):
+        currentWindow.move (posy,posx+i)
+        currentWindow.addstr('#')
+        
+    for i in range(int(localvalue*float(length)/maxvalue),length,1):
+        currentWindow.move (posy, posx+i)
+        currentWindow.addstr('.')
+        
+    currentWindow.move (posy,posx+length+1)
+    currentWindow.addstr('('+ str(value)+ ')')
+
+def centerBar(currentWindow, posy, posx, length, value, maxvalue):
+    localvalue=value
+    if localvalue<-maxvalue:
+        localvalue=-maxvalue
+    
+    if localvalue>maxvalue:
+        localvalue=maxvalue
+      
+    for i in range(0,length,1):
+        currentWindow.move (posy, posx+i)
+        currentWindow.addstr('.')
+    
+    currentWindow.move (posy,posx+int(length/2))
+    currentWindow.addstr('#')
+    
+    if localvalue<0.0:
+        for i in range(0,int((-localvalue*float(length)/maxvalue)/2),1):
+            currentWindow.move (posy,posx+int(length/2)-i)
+            currentWindow.addstr('#')
+    else:   
+        for i in range(0,int((localvalue*float(length)/maxvalue)/2),1):
+            currentWindow.move (posy,posx+int(length/2)+i)
+            currentWindow.addstr('#')
+        
+    currentWindow.move (posy,posx+length+1)
+    currentWindow.addstr('('+ str(value)+ ')') 
+         
 # Thread for updating display
 def threadRefreshScreen(currentWindow) -> None:
     while 1:
         currentWindow.clear()
         currentWindow.addstr("Connected to " + GlobVar.address + ":" + str(GlobVar.port) +" = " + str(GlobVar.connectedToPi))
+        
         currentWindow.move(2,0)
-        currentWindow.addstr("Torque = " + str(GlobVar.torque))
-        currentWindow.move(3,0)
-        currentWindow.addstr("Angular Position = " + str(GlobVar.angularPosition))
+        currentWindow.addstr("Linear Speed (m/s):")
+        progressBar(currentWindow,2,25,50,GlobVar.linearSpeed,200.0)
+        
         currentWindow.move(4,0)
-        currentWindow.addstr("Angular Speed = " + str(GlobVar.angularSpeed))
+        currentWindow.addstr("Torque (N.m):")
+        centerBar(currentWindow,4,25,50,GlobVar.torque,15.0)
         currentWindow.move(5,0)
-        currentWindow.addstr("Linear Speed = " + str(GlobVar.linearSpeed))
+        currentWindow.addstr("Angular Position (rad):")
+        centerBar(currentWindow,5,25,50,GlobVar.angularPosition,35*math.pi/180.0)
         currentWindow.move(6,0)
-        currentWindow.addstr("Beta angle = " + str(GlobVar.betaAngle))
-        currentWindow.move(8,0)
-        currentWindow.addstr("Battery level = " + str(GlobVar.batteryLevel))
-        currentWindow.move(10,0)
-        currentWindow.addstr("User presence = " + str(GlobVar.userPresence))
+        currentWindow.addstr("Angular Speed (rad/s):")
+        centerBar(currentWindow,6,25,50,GlobVar.angularSpeed,math.pi)
+        currentWindow.move(7,0)
+        currentWindow.addstr("Beta angle (rad):")
+        centerBar(currentWindow,7,25,50,GlobVar.betaAngle,35*math.pi/180.0)
+        
+        currentWindow.move(9,0)
+        currentWindow.addstr("Battery level (%):")
+        progressBar(currentWindow,9,25,50,GlobVar.batteryLevel,100.0)
         currentWindow.move(11,0)
+        currentWindow.addstr("User presence = " + str(GlobVar.userPresence))
+        currentWindow.move(12,0)
         currentWindow.addstr("Emergency Stop = " + str(GlobVar.emergencyStop))
-        #currentWindow.move(12,0)
+        #currentWindow.move(13,0)
         #currentWindow.addstr("Last command received = " + str(GlobVar.lastCommand))
-        currentWindow.move(13,0)
+        currentWindow.move(14,0)
         currentWindow.addstr("Messages received (log)")
         
         # up to 8 messages
         for i in range(0,len(GlobVar.message)):
-            currentWindow.move(14+i,0)
+            currentWindow.move(15+i,0)
             currentWindow.addstr("[mes "+str(i)+ "] ")
             currentWindow.addstr(str(GlobVar.message[i]))
         
@@ -299,6 +355,7 @@ def threadPeriodic(net: Network) -> None:
         if GlobVar.dataReceived == True:
             GlobVar.dataReceived = False
         else:
+            pass
             GlobVar.angularPosition = 0.0
             GlobVar.angularSpeed=0.0
             GlobVar.batteryLevel=0.0
@@ -329,7 +386,7 @@ def receptionCallback(s:str) -> None:
     if Network.LABEL_GUI_ANGULAR_POSITION.lower() in str_split[0].lower():
         try:
             GlobVar.angularPosition = atof(str_split[1])
-        except:
+        except Exception as e:
             GlobVar.angularPosition = 0.0
     
     if Network.LABEL_GUI_ANGULAR_SPEED.lower() in str_split[0].lower():   
