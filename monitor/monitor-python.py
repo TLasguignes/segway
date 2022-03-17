@@ -16,8 +16,8 @@ import argparse
 
 from locale import atof, setlocale, LC_NUMERIC
 
-DEFAULT_PORT = 5544
-DEFAULT_ADDRESS = 'localhost'
+DEFAULT_PORT = 2345
+DEFAULT_ADDRESS = '10.105.1.98'
 
 setlocale(LC_NUMERIC, 'fr_FR.UTF-8')
 #atof('123,456')
@@ -292,62 +292,6 @@ def threadRefreshScreen(currentWindow) -> None:
         currentWindow.refresh()
         time.sleep(0.1)
 
-# Thread for reading keyboard keys and sending corresponding commands to server
-# def threadGetKeys(win: curses.window, net:Network) -> None:
-#     while 1: 
-#         try:                          
-#             key = win.getkey() 
-#             win.addstr(" KEY = " + key)
-            
-#             GlobVar.currentMovement = "Stop"
-#             if GlobVar.connectedToPi:
-#                 if key == "KEY_UP":
-#                     GlobVar.currentMovement = "Go Forward"
-#                     GlobVar.last_answer = net.robotGoForward()
-#                 elif key == "KEY_DOWN":
-#                     GlobVar.currentMovement = "Go Backward"
-#                     GlobVar.last_answer = net.robotGoBackward()
-#                 elif key == "KEY_RIGHT":
-#                     GlobVar.currentMovement = "Go Right"
-#                     GlobVar.last_answer = net.robotGoRight()
-#                 elif key == "KEY_LEFT":
-#                     GlobVar.currentMovement = "Go Left"
-#                     GlobVar.last_answer = net.robotGoLeft()
-#                 elif key == " ":
-#                     GlobVar.currentMovement = "Stop" 
-#                     GlobVar.last_answer = net.robotStop() 
-#                 elif key == "R" or key == 'r':
-#                     GlobVar.last_answer = net.robotReset() 
-#                     GlobVar.dumberStarted=False
-#                 elif key == "U" or key == 'u':
-#                     GlobVar.last_answer = net.robotStartWithoutWatchdog()
-#                     if GlobVar.last_answer == net.ACK:
-#                         GlobVar.dumberStarted=True
-#                     else:
-#                         GlobVar.dumberStarted=False 
-#                 elif key == "W" or key == 'w':
-#                     GlobVar.last_answer = net.robotStartWithWatchdog() 
-#                     if GlobVar.last_answer == net.ACK:
-#                         GlobVar.dumberStarted=True
-#                     else:
-#                         GlobVar.dumberStarted=False 
-#                 elif key == "C" or key=='c':
-#                     GlobVar.last_answer = net.robotCloseCom()
-#                     GlobVar.connectedToDumber=False
-#                     GlobVar.dumberStarted=False
-#                 elif key == "O" or key =='o':
-#                     GlobVar.last_answer = net.robotOpenCom() 
-#                     if GlobVar.last_answer == net.ACK:
-#                         GlobVar.connectedToDumber=True
-#                     else:
-#                         GlobVar.connectedToDumber=False         
-            
-#             #if key == os.linesep or key =='q' or key == 'Q':
-#             #    break  
-            
-#         except Exception as e:
-#             GlobVar.exceptionmsg="Exception received: " + str(e)
-
 # Thread used for requesting battery level, exit if getBatteryLevelPeriod is 0 or below
 def threadPeriodic(net: Network) -> None:
     while True:
@@ -364,81 +308,75 @@ def threadPeriodic(net: Network) -> None:
             GlobVar.linearSpeed=0.0
             GlobVar.torque=0.0
             GlobVar.userPresence=False
-            
-        # if GlobVar.getBatteryLevelPeriod>0:
-        #     time.sleep(GlobVar.getBatteryLevelPeriod)
-        
-        #     GlobVar.batteryLevel = -1
-        #     if GlobVar.connectedToPi:
-        #         net.robotGetBattery() 
-        # else:
-        #     break
         
 # Callback used to decode non answer message from server (mainly battery level and log message)
 def receptionCallback(s:str) -> None:
-    if s[-1] == '\n':
-        s = s[:-1]
+    msg_split = s.split('\n')
+    
+    #if s[-1] == '\n':
+    #    s = s[:-1]
+    
+    for msg in msg_split:    
+        GlobVar.lastCommand = msg
+        str_split = msg.split(Network.SEPARATOR_CHAR)
+        GlobVar.dataReceived = True
         
-    GlobVar.lastCommand = s
-    str_split = s.split(Network.SEPARATOR_CHAR)
-    GlobVar.dataReceived = True
-    
-    if Network.LABEL_GUI_ANGULAR_POSITION.lower() in str_split[0].lower():
-        try:
-            GlobVar.angularPosition = atof(str_split[1])
-        except Exception as e:
-            GlobVar.angularPosition = 0.0
-    
-    if Network.LABEL_GUI_ANGULAR_SPEED.lower() in str_split[0].lower():   
-        try:
-            GlobVar.angularSpeed = atof(str_split[1])
-        except:
-            GlobVar.angularSpeed = 0.0
-    
-    if Network.LABEL_GUI_BATTERY_LEVEL.lower() in str_split[0].lower():
-        try:
-            GlobVar.batteryLevel = atof(str_split[1])
-        except:
-            GlobVar.batteryLevel = 0.0
-    
-    if Network.LABEL_GUI_LINEAR_SPEED.lower() in str_split[0].lower():
-        try:
-            GlobVar.linearSpeed = atof(str_split[1])
-        except:
-            GlobVar.linearSpeed = 0.0
-    
-    if Network.LABEL_GUI_USER_PRESENCE.lower() in str_split[0].lower():
-        try:
-            GlobVar.userPresence = bool(str_split[1])
-        except:
-            GlobVar.userPresence = False
-    
-    if Network.LABEL_GUI_BETA_ANGLE.lower() in str_split[0].lower():
-        try:
-            GlobVar.betaAngle = atof(str_split[1])
-        except:
-            GlobVar.betaAngle = 0.0
-    
-    if Network.LABEL_GUI_TORQUE.lower() in str_split[0].lower():
-        try:
-            GlobVar.torque = atof(str_split[1])
-        except:
-            GlobVar.torque = 0.0
-    
-    if Network.LABEL_GUI_EMERGENCY_STOP.lower() in str_split[0].lower():
-        try:
-            GlobVar.emergencyStop = bool(str_split[1])
-        except:
-            GlobVar.emergencyStop = 0.0
-    
-    if Network.LABEL_GUI_LOG.lower() in str_split[0].lower():
-        try:
-            GlobVar.message.append(str(str_split[1]))
-        except Exception as e:
-            GlobVar.exceptionmsg = str(e)
+        if Network.LABEL_GUI_ANGULAR_POSITION.lower() in str_split[0].lower():
+            try:
+                GlobVar.angularPosition = atof(str_split[1])
+            except Exception as e:
+                GlobVar.angularPosition = 0.0
         
-        if len(GlobVar.message) > 8:
-            GlobVar.message.pop(0)
+        if Network.LABEL_GUI_ANGULAR_SPEED.lower() in str_split[0].lower():   
+            try:
+                GlobVar.angularSpeed = atof(str_split[1])
+            except:
+                GlobVar.angularSpeed = 0.0
+        
+        if Network.LABEL_GUI_BATTERY_LEVEL.lower() in str_split[0].lower():
+            try:
+                GlobVar.batteryLevel = atof(str_split[1])
+            except:
+                GlobVar.batteryLevel = 0.0
+        
+        if Network.LABEL_GUI_LINEAR_SPEED.lower() in str_split[0].lower():
+            try:
+                GlobVar.linearSpeed = atof(str_split[1])
+            except:
+                GlobVar.linearSpeed = 0.0
+        
+        if Network.LABEL_GUI_USER_PRESENCE.lower() in str_split[0].lower():
+            if "true" in str_split[1].lower():
+                GlobVar.userPresence=True
+            else:
+                GlobVar.userPresence=False
+        
+        if Network.LABEL_GUI_BETA_ANGLE.lower() in str_split[0].lower():
+            try:
+                GlobVar.betaAngle = atof(str_split[1])
+            except:
+                GlobVar.betaAngle = 0.0
+        
+        if Network.LABEL_GUI_TORQUE.lower() in str_split[0].lower():
+            try:
+                GlobVar.torque = atof(str_split[1])
+            except:
+                GlobVar.torque = 0.0
+        
+        if Network.LABEL_GUI_EMERGENCY_STOP.lower() in str_split[0].lower():
+            if "true" in str_split[1].lower():
+                GlobVar.emergencyStop=True
+            else:
+                GlobVar.emergencyStop=False
+        
+        if Network.LABEL_GUI_LOG.lower() in str_split[0].lower():
+            try:
+                GlobVar.message.append(str(str_split[1]))
+            except Exception as e:
+                GlobVar.exceptionmsg = str(e)
+            
+            if len(GlobVar.message) > 8:
+                GlobVar.message.pop(0)
 
 # Callback for connection/deconnection event from network manager
 def eventCallback(event: NetworkEvents) -> None:
@@ -465,7 +403,7 @@ def main(win: curses.window) -> None:
 
     periodicThread = threading.Thread(target=threadPeriodic, args=(net,))
     periodicThread.daemon=True
-    periodicThread.start()
+    #periodicThread.start()
 
     windowThread.join()
     

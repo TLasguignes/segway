@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args" : ["localhost", "-p 5544"],
+            "args" : ["10.105.1.98", "-p 2345"],
             "console": "integratedTerminal",
             "justMyCode": true
         }
