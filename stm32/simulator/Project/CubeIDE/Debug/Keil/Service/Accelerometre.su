@@ -1,3 +1,0 @@
-Accelerometre.c:19:6:Acc_config	24	static
-Accelerometre.c:58:6:Acc_read	40	static
-Accelerometre.c:90:10:Acc_TIMEOUT_UserCallback	4	static
