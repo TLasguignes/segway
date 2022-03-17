@@ -290,7 +290,7 @@ def threadRefreshScreen(currentWindow) -> None:
         currentWindow.move(23,0)
         currentWindow.addstr("           CTRL-C = Quit program")
         currentWindow.refresh()
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 # Thread for reading keyboard keys and sending corresponding commands to server
 # def threadGetKeys(win: curses.window, net:Network) -> None:
