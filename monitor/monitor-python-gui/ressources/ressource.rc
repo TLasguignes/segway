@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>battery0.png</file>
+    <file>battery25.png</file>
+    <file>battery50.png</file>
+    <file>battery75.png</file>
+    <file>battery100.png</file>
+    <file>batteryInvalid.png</file>
+    <file>connected.png</file>
+    <file>disconnected.png</file>
+    <file>emergency-invalid.png</file>
+    <file>emergency-off.png</file>
+    <file>emergency-on.png</file>
+    <file>no-wifi.png</file>
+    <file>segway.resized.png</file>
+    <file>userNotPresent.png</file>
+    <file>userPresent.png</file>
+    <file>wifi.png</file>
+  </qresource>
+</RCC>

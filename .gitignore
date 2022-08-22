@@ -66,3 +66,4 @@ GUI
 /simulator/pthread-test/dist/
 /simulator/raspberry/build/
 /simulator/raspberry/dist/
+__pycache__/
