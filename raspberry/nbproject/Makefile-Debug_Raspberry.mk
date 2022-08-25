@@ -39,10 +39,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/lib/comgui.o \
 	${OBJECTDIR}/lib/comstm32.o \
 	${OBJECTDIR}/lib/messages.o \
-	${OBJECTDIR}/lib/trace.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/parameters.o \
-	${OBJECTDIR}/tasks.o
+	${OBJECTDIR}/tasks.o \
+	${OBJECTDIR}/wrapper.o
 
 
 # C Compiler Flags
@@ -59,7 +59,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/usr/xenomai/lib -lalchemy -lcopperplate /usr/xenomai/lib/xenomai/bootstrap.o -Wl,--wrap=main -Wl,--dynamic-list=/usr/xenomai/lib/dynlist.ld -lcobalt -lpthread
+LDLIBSOPTIONS=-L/usr/xenomai/lib /usr/xenomai/lib/xenomai/bootstrap.o -lalchemy -lcopperplate -Wl,--wrap=main -Wl,--dynamic-list=/usr/xenomai/lib/dynlist.ld -lcobalt -lpthread
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -72,42 +72,42 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/segway_supervisor: ${OBJECTFILES}
 ${OBJECTDIR}/control.o: control.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/control.o control.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/control.o control.cpp
 
 ${OBJECTDIR}/lib/comgui.o: lib/comgui.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/comgui.o lib/comgui.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/comgui.o lib/comgui.cpp
 
 ${OBJECTDIR}/lib/comstm32.o: lib/comstm32.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/comstm32.o lib/comstm32.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/comstm32.o lib/comstm32.cpp
 
 ${OBJECTDIR}/lib/messages.o: lib/messages.cpp
 	${MKDIR} -p ${OBJECTDIR}/lib
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/messages.o lib/messages.cpp
-
-${OBJECTDIR}/lib/trace.o: lib/trace.cpp
-	${MKDIR} -p ${OBJECTDIR}/lib
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/trace.o lib/trace.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lib/messages.o lib/messages.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/parameters.o: parameters.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/parameters.o parameters.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/parameters.o parameters.cpp
 
 ${OBJECTDIR}/tasks.o: tasks.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
+	$(COMPILE.cc) -g -D_GNU_SOURCE -D_REENTRANT -D__COBALT__ -Ilib -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -I/usr/xenomai/include/alchemy -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
+
+${OBJECTDIR}/wrapper.o: wrapper.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/wrapper.o wrapper.c
 
 # Subprojects
 .build-subprojects:

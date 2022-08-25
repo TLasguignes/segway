@@ -29,6 +29,7 @@
       <itemPath>parameters.cpp</itemPath>
       <itemPath>tasks.cpp</itemPath>
       <itemPath>lib/trace.cpp</itemPath>
+      <itemPath>wrapper.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -114,6 +115,8 @@
       </item>
       <item path="tasks.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="wrapper.c" ex="false" tool="0" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -169,6 +172,8 @@
       </item>
       <item path="tasks.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="wrapper.c" ex="false" tool="0" flavor2="0">
+      </item>
     </conf>
     <conf name="Debug_Raspberry" type="1">
       <toolsSet>
@@ -178,7 +183,6 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <standard>8</standard>
           <incDir>
             <pElem>lib</pElem>
             <pElem>/usr/xenomai/include/cobalt</pElem>
@@ -198,9 +202,9 @@
             <pElem>/usr/xenomai/lib</pElem>
           </linkerAddLib>
           <linkerLibItems>
+            <linkerOptionItem>/usr/xenomai/lib/xenomai/bootstrap.o</linkerOptionItem>
             <linkerOptionItem>-lalchemy</linkerOptionItem>
             <linkerOptionItem>-lcopperplate</linkerOptionItem>
-            <linkerOptionItem>/usr/xenomai/lib/xenomai/bootstrap.o</linkerOptionItem>
             <linkerOptionItem>-Wl,--wrap=main</linkerOptionItem>
             <linkerOptionItem>-Wl,--dynamic-list=/usr/xenomai/lib/dynlist.ld</linkerOptionItem>
             <linkerOptionItem>-lcobalt</linkerOptionItem>
@@ -212,35 +216,37 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="control.cpp" ex="false" tool="1" flavor2="8">
+      <item path="control.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="control.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/comgui.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/comgui.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="lib/comgui.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/comstm32.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/comstm32.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="lib/comstm32.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/messages.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/messages.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="lib/messages.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="lib/trace.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/trace.cpp" ex="true" tool="1" flavor2="8">
       </item>
       <item path="lib/trace.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="8">
+      <item path="main.cpp" ex="false" tool="1" flavor2="9">
       </item>
-      <item path="parameters.cpp" ex="false" tool="1" flavor2="8">
+      <item path="parameters.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="parameters.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="tasks.cpp" ex="false" tool="1" flavor2="8">
+      <item path="tasks.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="tasks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="wrapper.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

@@ -125,63 +125,66 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
     # Callback used to decode non answer message from server (mainly battery level and log message)
     @QtCore.pyqtSlot(str) 
     def OnReceptionEvent(self, s) -> None: 
+        msgList = s.split('\n')
         
-        str_split = s.split(Network.SEPARATOR_CHAR)
-        GlobVar.dataReceived = True
-        
-        if Network.LABEL_GUI_ANGULAR_POSITION.lower() in str_split[0].lower():
-            try:
-                GlobVar.angularPosition = atof(str_split[1])
-            except Exception as e:
-                GlobVar.angularPosition = 0.0
-        
-        elif Network.LABEL_GUI_ANGULAR_SPEED.lower() in str_split[0].lower():   
-            try:
-                GlobVar.angularSpeed = atof(str_split[1])
-            except:
-                GlobVar.angularSpeed = 0.0
-        
-        elif Network.LABEL_GUI_BATTERY_LEVEL.lower() in str_split[0].lower():
-            try:
-                GlobVar.batteryLevel = atof(str_split[1])
-            except:
-                GlobVar.batteryLevel = 0.0
-        
-        elif Network.LABEL_GUI_LINEAR_SPEED.lower() in str_split[0].lower():
-            try:
-                GlobVar.linearSpeed = atof(str_split[1])
-            except:
-                GlobVar.linearSpeed = 0.0
-        
-        elif Network.LABEL_GUI_USER_PRESENCE.lower() in str_split[0].lower():
-            if "true" in str_split[1].lower():
-                GlobVar.userPresence=True
-            else:
-                GlobVar.userPresence=False
-        
-        elif Network.LABEL_GUI_BETA_ANGLE.lower() in str_split[0].lower():
-            try:
-                GlobVar.betaAngle = atof(str_split[1])
-            except:
-                GlobVar.betaAngle = 0.0
-        
-        elif Network.LABEL_GUI_TORQUE.lower() in str_split[0].lower():
-            try:
-                GlobVar.torque = atof(str_split[1])
-            except:
-                GlobVar.torque = 0.0
-        
-        elif Network.LABEL_GUI_EMERGENCY_STOP.lower() in str_split[0].lower():
-            if "true" in str_split[1].lower():
-                GlobVar.emergencyStop=True
-            else:
-                GlobVar.emergencyStop=False
-        
-        elif Network.LABEL_GUI_LOG.lower() in str_split[0].lower():
-            pass
-        
-        else:
-            print ("unknown message: " + s)
+        for msg in msgList:
+            if msg != "":
+                str_split = msg.split(Network.SEPARATOR_CHAR)
+                GlobVar.dataReceived = True
+                
+                if Network.LABEL_GUI_ANGULAR_POSITION.lower() in str_split[0].lower():
+                    try:
+                        GlobVar.angularPosition = atof(str_split[1])
+                    except Exception as e:
+                        GlobVar.angularPosition = 0.0
+                
+                elif Network.LABEL_GUI_ANGULAR_SPEED.lower() in str_split[0].lower():   
+                    try:
+                        GlobVar.angularSpeed = atof(str_split[1])
+                    except:
+                        GlobVar.angularSpeed = 0.0
+                
+                elif Network.LABEL_GUI_BATTERY_LEVEL.lower() in str_split[0].lower():
+                    try:
+                        GlobVar.batteryLevel = atof(str_split[1])
+                    except:
+                        GlobVar.batteryLevel = 0.0
+                
+                elif Network.LABEL_GUI_LINEAR_SPEED.lower() in str_split[0].lower():
+                    try:
+                        GlobVar.linearSpeed = atof(str_split[1])
+                    except:
+                        GlobVar.linearSpeed = 0.0
+                
+                elif Network.LABEL_GUI_USER_PRESENCE.lower() in str_split[0].lower():
+                    if "true" in str_split[1].lower():
+                        GlobVar.userPresence=True
+                    else:
+                        GlobVar.userPresence=False
+                
+                elif Network.LABEL_GUI_BETA_ANGLE.lower() in str_split[0].lower():
+                    try:
+                        GlobVar.betaAngle = atof(str_split[1])
+                    except:
+                        GlobVar.betaAngle = 0.0
+                
+                elif Network.LABEL_GUI_TORQUE.lower() in str_split[0].lower():
+                    try:
+                        GlobVar.torque = atof(str_split[1])
+                    except:
+                        GlobVar.torque = 0.0
+                
+                elif Network.LABEL_GUI_EMERGENCY_STOP.lower() in str_split[0].lower():
+                    if "true" in str_split[1].lower():
+                        GlobVar.emergencyStop=True
+                    else:
+                        GlobVar.emergencyStop=False
+                
+                elif Network.LABEL_GUI_LOG.lower() in str_split[0].lower():
+                    pass
+                
+                else:
+                    print ("unknown message: " + msg)
 
     # Callback for connection/deconnection event from network manager
     @QtCore.pyqtSlot(int) 
@@ -218,9 +221,8 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
             elif valf>100.0:
                valf=100.0    
             
-            #print ("\nBeta: \tRaw val: " + str(GlobVar.betaAngle) + "\n\tValf:"+ str(valf))
             self.progressBar_Angle_Beta.setValue(int(valf))  
-            self.label_Beta.setText(str(GlobVar.betaAngle) + " rad")  
+            self.label_Beta.setText("{:.2f} rad".format(GlobVar.betaAngle))  
             
             valf = ((GlobVar.angularPosition+0.61) *100.0)/(2*0.61)
             if valf<0.0:
@@ -229,7 +231,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                 valf=100.0    
 
             self.progressBar_Angular_Position.setValue(int(valf))         
-            self.label_AngularPosition.setText(str(GlobVar.angularPosition) + " rad")  
+            self.label_AngularPosition.setText("{:.2f} rad".format(GlobVar.angularPosition))  
             
             valf = ((GlobVar.angularSpeed + math.pi) *100.0)/(2*math.pi)
             if valf<0.0:
@@ -238,7 +240,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                 valf=100.0    
 
             self.progressBar_Angular_Speed.setValue(int(valf))
-            self.label_AngularSpeed.setText(str(GlobVar.angularSpeed) + " rad/s") 
+            self.label_AngularSpeed.setText("{:.2f} rad/s".format(GlobVar.angularSpeed)) 
             
             valf = ((GlobVar.torque+15.0) *100.0)/(2*15.0)
             if valf<0.0:
@@ -247,7 +249,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                 valf=100.0    
 
             self.progressBar_Torque.setValue(int(valf))
-            self.label_Torque.setText(str(GlobVar.torque) + " N.m")
+            self.label_Torque.setText("{:.2f} N.m".format(GlobVar.torque))
             
             valf = (GlobVar.linearSpeed *100.0)/(200.0)
             if valf<0.0:
@@ -256,7 +258,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                 valf=100.0    
 
             self.progressBar_Linear_Speed.setValue(int(valf))
-            self.label_LinearSpeed.setText(str(GlobVar.linearSpeed) + " m/s")
+            self.label_LinearSpeed.setText("{:.2f} m/s".format(GlobVar.linearSpeed))
             
             if GlobVar.userPresence == True:
                 self.icon_user.setPixmap(QtGui.QPixmap(":/icons/userPresent.png"))
@@ -272,7 +274,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.icon_emergency.setPixmap(QtGui.QPixmap(":/icons/emergency-off.png"))
                 self.label_emergency.setText("No emergency")
 
-            self.label_battery.setText(str(GlobVar.batteryLevel)+" %")
+            self.label_battery.setText("{:.1f} %".format(GlobVar.batteryLevel))
             if GlobVar.batteryLevel >= 88.0:
                 self.icon_battery.setPixmap(QtGui.QPixmap(":/icons/battery100.png"))  
             elif GlobVar.batteryLevel >= 63.0:

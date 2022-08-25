@@ -42,7 +42,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/lib/trace.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/parameters.o \
-	${OBJECTDIR}/tasks.o
+	${OBJECTDIR}/tasks.o \
+	${OBJECTDIR}/wrapper.o
 
 
 # C Compiler Flags
@@ -108,6 +109,11 @@ ${OBJECTDIR}/tasks.o: tasks.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/tasks.o tasks.cpp
+
+${OBJECTDIR}/wrapper.o: wrapper.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/wrapper.o wrapper.c
 
 # Subprojects
 .build-subprojects:
