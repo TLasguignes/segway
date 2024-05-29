@@ -20,15 +20,17 @@
 #define k1 -25.8598f  /* Process control constants */
 #define k2 -6.5593f
 
-/**
- * Algorithm for computing control torque needed to bring user angle (beta) to 0
- * @param anglePosition Angle between segway and ground
- * @param angularSpeed Angular speed of wheel
- * @return Torque to provide to STM32 for bring back Beta angle to zero
- */
-float Control::ComputeTorque(float anglePosition, float angularSpeed) {
-    float torque;
-
-    torque = -1.0 * (k1 * anglePosition + k2 * angularSpeed);
-    return torque;
+namespace Control{
+    /**
+     * Algorithm for computing control torque needed to bring user angle (beta) to 0
+     * @param anglePosition Angle between segway and ground
+     * @param angularSpeed Angular speed of wheel
+     * @return Torque to provide to STM32 for bring back Beta angle to zero
+     */
+    float ComputeTorque(float anglePosition, float angularSpeed) {
+        float torque;
+        
+        torque = -1.0 * (k1 * anglePosition + k2 * angularSpeed);
+        return torque;
+    }
 }

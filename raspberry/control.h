@@ -19,13 +19,12 @@
 #define __CONTROL_H__
 
 /**
- * Static class for process control algorithms
+ * Namespace for control algorithms
  * 
  * @brief Process control algorithms
  * 
  */
-class Control {
-public:
+namespace Control {
     /**
      * Algorithm for computing control torque needed to bring user angle (beta) to 0
      * @param anglePosition Angle between segway and ground
@@ -33,17 +32,6 @@ public:
      * @return Torque to provide to STM32 for bring back Beta angle to zero
      */
     static float ComputeTorque(float anglePosition, float angularSpeed);
-    
-private:
-    /**
-     * Static class: no constructor
-     */
-    Control();
-    
-    /**
-     * Static class: no destructor
-     */
-    ~Control();
-};
+}
 
 #endif /* __CONTROL_H__ */
