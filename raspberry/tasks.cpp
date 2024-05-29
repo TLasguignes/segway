@@ -236,25 +236,25 @@ void Tasks::TaskStm32Reception(void *arg) {
     Message *msg;
     int err = 0;
 
-    cout << "Start TaskStm32Reception task" << endl;
+    cout << "Start " << __PRETTY_FUNCTION__ << " task" << endl << flush;
 
     while (1) {
         //Read incoming command from stm32
         msg = this->comStm32->Read();
         
-        cout << "Write in queue" <<endl <<flush;
+        cout << "Write in queue" << endl << flush;
         err = rt_queue_write(&this->queueFromStm32, &msg, sizeof (msg), Q_FIFO);
 
         if (err < 0) {
             switch (err) {
                 case (-ENOMEM):
-                    cout <<"queueFromStm32 error limit exceeded " <<err <<endl <<flush;
+                    cout << "queueFromStm32 error limit exceeded " << err << endl << flush;
                     break;
                 case (-EINVAL):
-                    cout <<"queueFromStm32 error: first argument is not a message queue descriptor or invalid mode or buf is NULL: "<< err<<endl <<flush;
+                    cout << "queueFromStm32 error: first argument is not a message queue descriptor or invalid mode or buf is NULL: " << err << endl << flush;
                     break;
                 default:
-                    cout <<"Unknown error: "<< err<<endl <<flush;
+                    cout << "Unknown error: " << err << endl << flush;
                     break;
             }
             
@@ -270,19 +270,19 @@ void Tasks::TaskStm32Reception(void *arg) {
 void Tasks::TaskGui(void *arg) {
     Message *msg;
 
-    cout << "Start TaskGui task" << endl;
+    cout << "Start " << __PRETTY_FUNCTION__ << " task" << endl;
 
     rt_task_set_periodic(NULL, TM_NOW, 10000000);
 
     while (1) {
         rt_task_wait_period(NULL);
-        cout << "TaskGui: new periodic activation" << endl<<flush;
+        cout << "TaskGui: new periodic activation" << endl << flush;
         
         // Pend on semaphore (just to see how to pend on semaphore)
-        cout << "Pend on semaphore" << endl<<flush;
+        cout << "Pend on semaphore" << endl << flush;
         rt_sem_v(&this->semDummy);
         
-        cout << "Send data to GUI" << endl<<flush;
+        cout << "Send data to GUI" << endl << flush;
         this->comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, this->parameters->AngularPosition()));
         this->comGui->Write(new MessageFloat(MESSAGE_BATTERY, this->parameters->Battery()));
         this->comGui->Write(new MessageFloat(MESSAGE_BETA, this->parameters->Beta()));
@@ -292,7 +292,7 @@ void Tasks::TaskGui(void *arg) {
         this->comGui->Write(new MessageFloat(MESSAGE_LINEAR_SPEED, this->parameters->LinearSpeed()));
         this->comGui->Write(new MessageBool(MESSAGE_EMERGENCY_STOP, this->parameters->EmergencyStop()));
         
-        cout << "Send done" << endl<<flush;
+        cout << "Send done" << endl << flush;
     }
 }
 
@@ -308,18 +308,18 @@ void Tasks::TaskSystemControl(void * arg) {
     float torque;
     int err;
    
-    cout << "Start TaskSystemControl task" << endl;
+    cout << "Start " << __PRETTY_FUNCTION__ << " task" << endl;
 
     while (1) {
-        cout << "Read from queue" << endl<<flush;
+        cout << "Read from queue" << endl << flush;
         err = rt_queue_read(&this->queueFromStm32, &msg, sizeof (msg), Q_UNLIMITED);
         if (err < 0) throw std::runtime_error {"Error read queue"};
-        cout << "Queue read !" << endl<<flush;
+        cout << "Queue read !" << endl << flush;
         
         this->UpdateParameters(msg);
         
-        cout << "Produce semaphore" << endl<<flush;
+        cout << "Produce semaphore" << endl << flush;
         rt_sem_v(&this->semDummy);
-        cout << "Semaphore produced ! " << endl<<flush;
+        cout << "Semaphore produced ! " << endl << flush;
     }
 }
