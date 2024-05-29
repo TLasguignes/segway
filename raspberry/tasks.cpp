@@ -280,7 +280,7 @@ void Tasks::TaskGui(void *arg) {
         
         // Pend on semaphore (just to see how to pend on semaphore)
         cout << "Pend on semaphore" << endl << flush;
-        rt_sem_v(&this->semDummy);
+        rt_sem_p(&this->semDummy, TM_INFINITE);
         
         cout << "Send data to GUI" << endl << flush;
         this->comGui->Write(new MessageFloat(MESSAGE_ANGLE_POSITION, this->parameters->AngularPosition()));
