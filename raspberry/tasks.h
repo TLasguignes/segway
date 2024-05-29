@@ -73,6 +73,11 @@ public:
     void DeleteTasks();
     
     /**
+     * Clean closing of communications
+     */
+    void Close();
+    
+    /**
      * Helper function for storing parameter value in correct parameter objetc
      * @param msg Message to store value into parameters object
      */

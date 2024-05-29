@@ -18,16 +18,30 @@
 #include <sys/mman.h>
 #include <iostream>
 #include <unistd.h>
+#include <signal.h>
 
-//#include "tasks.h"
 #include "tasks.h"
 
+// global tasks to access it in the interruption handler
+Tasks *tasks = nullptr;
+
+/**
+ * Handler for the interrupting signal: to force clean quit.
+ * @param s
+ */
+void kbInterruptHandler(int s){
+    cout << "Interrupting code" << endl;
+    tasks->DeleteTasks();
+    tasks->Close();
+    exit(-1);
+}
 /**
  * @brief Main function of segway supervisor program
  */
 int main(void) {
     int status;
-    Tasks *tasks;
+    
+    struct sigaction kbIntAction;
     
     /* disable memory swap */
     mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -36,22 +50,24 @@ int main(void) {
     cout << "Segway Supervisor" << endl << endl;
     tasks = new Tasks();
     tasks->Init(); // Création des tâches, mutex, sémaphores, files de messages, ouverture des ports
-    //Tasks::Init();
     
     // Wait client to connect
     cout << "Waiting for client (GUI) to connect ..." << endl;
     status = tasks->WaitForClient();
-    //status = Tasks::comGui->AcceptClient();
+
+    kbIntAction.sa_handler = kbInterruptHandler;
+    sigemptyset(&kbIntAction.sa_mask);
+    kbIntAction.sa_flags = 0;
+
+    sigaction(SIGINT, &kbIntAction, NULL);
 
     if (status >= 0) {
         cout << "Client connected (" << status << "), rock'n'roll baby !" << endl << endl;
 
         tasks->StartTasks(); // Démarre toutes les tâches
-        //Tasks::StartTasks();
 
         pause();
         tasks->DeleteTasks();
-        //Tasks::DeleteTasks();
     }
 
     //stop_recording();

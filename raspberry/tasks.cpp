@@ -172,15 +172,38 @@ void Tasks::StartTasks() {
         throw std::runtime_error {
         "Error when starting TaskStm32Reception : " + string(strerror(-err))
     };
+    
+    cout << "Tasks started" << endl;
 }
 
 /**
  * Clean destruction of tasks, realtime system stops here
  */
 void Tasks::DeleteTasks() {
-    rt_task_delete(&this->taskStm32ReceptionHandler);
-    rt_task_delete(&this->taskGuiHandler);
-    rt_task_delete(&this->taskSystemControlHandler);
+    int err;
+    
+    if(err = rt_task_delete(&this->taskStm32ReceptionHandler))
+        cout << "Error when deleting TaskStm32Reception : " << err << endl;
+    if(err = rt_task_delete(&this->taskGuiHandler))
+        cout << "Error when deleting TaskGui : " << err << endl;
+    if(err = rt_task_delete(&this->taskSystemControlHandler))
+        cout << "Error when deleting TaskSystemControl : " << err << endl;
+    
+    cout << "Tasks deleted" << endl;
+}
+
+/**
+ * Clean closing of communications
+ */
+void Tasks::Close() {
+    int err;
+
+    if(err = this->comStm32->Close())
+        cout << "Error closing comStm32 (" << err << ")" <<endl;
+    else
+        cout << "comStm32 closed" << endl;
+    this->comGui->Close();
+    cout << "comGui closed" << endl;
 }
 
 /**
